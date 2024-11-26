@@ -1,10 +1,11 @@
-import { IonButton } from "@ionic/react";
+import { IonButton, IonIcon } from "@ionic/react";
 import "./BackButton.css";
+import { chevronBackOutline } from 'ionicons/icons';
 
 const BackButton: React.FC = () => {
   return (
-    <IonButton fill="solid" color="danger" onClick={() => history.back()}>
-      Go Back
+    <IonButton slot='start' color="danger" onClick={() => history.back()}>
+      <IonIcon icon={chevronBackOutline} size="large"/>
     </IonButton>
   );
 };
