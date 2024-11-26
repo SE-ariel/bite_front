@@ -1,11 +1,11 @@
-import { IonBackButton } from '@ionic/react';
-import './BackButton.css';
-
-
+import { IonButton } from "@ionic/react";
+import "./BackButton.css";
 
 const BackButton: React.FC = () => {
   return (
-    <IonBackButton />
+    <IonButton fill="solid" color="danger" onClick={() => history.back()}>
+      Go Back
+    </IonButton>
   );
 };
 
