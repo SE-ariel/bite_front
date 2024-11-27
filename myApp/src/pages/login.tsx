@@ -22,7 +22,7 @@ const LoginPage = () => {
   const [error, setError] = useState("");
   const handleFormSubmit = () => {
     if (!email || !password) {
-      setError("Email and password cannot be empty.");
+      setError("One of your fields is empty.");
       return;
     }
     const isValidEmail = email === "test@example.com"; // Replace with your validation logic
@@ -32,6 +32,11 @@ const LoginPage = () => {
       setError("  Email or password is incorrect.");
       return;
     }
+    if (isSignUp && (!name || !surname || !role)) {
+      setError("One of your fields is empty.");
+      return;
+    }
+  
     setError(""); // Clear the error if credentials are correct
     if (isSignUp) {
       console.log("Sign Up", { name, surname, role, email, password });
@@ -41,6 +46,12 @@ const LoginPage = () => {
   };
   const toggleSignUp = () => {
     setIsSignUp(!isSignUp); // Toggle between Sign Up and Login
+    setEmail(""); // Clear email field
+    setPassword(""); // Clear password field
+    setError(""); // Clear error messages
+  };
+  const toggleSignIn = () => {
+    setIsSignUp(isSignUp); // Toggle between Sign Up and Login
     setEmail(""); // Clear email field
     setPassword(""); // Clear password field
     setError(""); // Clear error messages
@@ -140,13 +151,13 @@ const LoginPage = () => {
             {isSignUp ? (
               <>
                 Already a member?{" "}
-                <span onClick={() => setIsSignUp(false)}>Login here</span>
+                <span onClick={toggleSignUp}>Login here</span>
               </>
             ) : (
               <>
                 Not a member?{" "}
                 <span
-                  onClick={toggleSignUp}
+                  onClick={toggleSignIn}
                   style={{ color: "blue", cursor: "pointer" }}
                 >
                   Sign up now
