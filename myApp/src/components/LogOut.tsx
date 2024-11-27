@@ -3,7 +3,7 @@ import "./LogOut.css";
 
 const LogOut: React.FC = () => {
   return (
-    <IonButton slot='start' size="large" fill='outline' color="danger" href="/logout" style={{textTransform: 'none'}}>
+    <IonButton slot='start' size="large" fill='outline' color="danger" href="/login" style={{textTransform: 'none'}}>
         {'Logout'}
     </IonButton>
   );
