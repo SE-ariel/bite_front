@@ -1,0 +1,84 @@
+/* Header Icon */
+.header-icon {
+  position: relative;
+  height: 120px; /* Increase height to make room for the gap */
+  display: flex;
+  justify-content: center;
+  align-items: flex-start; /* Align icon to the top of the container */
+  padding-top: 30px; /* Add a gap above the icon */
+}
+
+.header-icon img {
+  height: 80px; /* Adjust the icon size */
+}
+
+/* Main Container */
+.main-container {
+  max-width: 400px;
+  margin: auto;
+  margin-top: 50px;
+  background: white;
+  border-radius: 10px;
+  padding: 6px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+
+/* Action Button */
+.action-button {
+  margin-top: 20px; 
+  --background: #ff0000; /* Default red for Login */
+  --color: white;
+}
+
+.signup-button {
+  --background: #28a745; /* Green for Sign Up */
+}
+
+/* Divider */
+.divider {
+  margin: 10px 0;
+  color: #aaa;
+}
+
+/* Social Buttons Container */
+.social-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+/* Social Buttons */
+.social-button {
+  --background: none !important;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0;
+  box-shadow: none;
+  border: none;
+}
+
+.facebook-button {
+  background-color: #4267b2; /* Facebook blue */
+  color: white;
+}
+
+.google-button {
+  background-color: #db4437 ; /* Google red */
+  color: white ;
+}
+
+/* Footer */
+.footer {
+  margin-top: 20px;
+  font-size: 14px;
+}
+
+.footer span {
+  color: #4267b2;
+  cursor: pointer;
+}
