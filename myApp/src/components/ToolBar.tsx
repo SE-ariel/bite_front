@@ -1,7 +1,7 @@
 import { IonButtons, IonTitle, IonToolbar } from '@ionic/react';
 import './ToolBar.css';
 import BackButton from './BackButton';
-import LogOut from './LogOut';
+import LogOut from './LogOutButton';
 
 interface Props {
     title: string;
