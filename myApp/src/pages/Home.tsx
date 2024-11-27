@@ -4,11 +4,13 @@ import './Home.css';
 import ToolBar from '../components/ToolBar';
 
 const Home: React.FC = () => {
+
   return (
     <IonPage>
       <IonHeader>
         <ToolBar title='Home'/>
       </IonHeader>
+      
       <IonContent fullscreen>
         <IonHeader collapse="condense">
           <IonToolbar>
