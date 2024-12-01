@@ -1,61 +1,40 @@
 import React, { useState } from "react";
+import { useHistory } from "react-router-dom"; // Import useHistory from React Router v5
 import {
   IonContent,
   IonPage,
   IonButton,
-  IonLabel,
-  IonItem,
-  IonSelect,
-  IonSelectOption,
   IonIcon,
 } from "@ionic/react";
 import { logoGoogle, logoFacebook } from "ionicons/icons";
-import "./login.css"; // Import the CSS file
-import InputField from "../components/InputField";
+import InputField from "../components/InputField"; // Ensure this path matches your file structure
+import "./login.css";
+
 const LoginPage = () => {
-  const [isSignUp, setIsSignUp] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [role, setRole] = useState("");
-  const [name, setName] = useState("");
-  const [surname, setSurname] = useState("");
   const [error, setError] = useState("");
+  const history = useHistory(); // Initialize useHistory hook
+
   const handleFormSubmit = () => {
     if (!email || !password) {
       setError("One of your fields is empty.");
       return;
     }
-    const isValidEmail = email === "test@example.com"; // Replace with your validation logic
-    const isValidPassword = password === "mypassword"; // Replace with your validation logic
+
+    const isValidEmail = email === "test@example.com"; // Replace with actual validation logic
+    const isValidPassword = password === "mypassword"; // Replace with actual validation logic
 
     if (!isValidEmail || !isValidPassword) {
-      setError("  Email or password is incorrect.");
+      setError("Email or password is incorrect.");
       return;
     }
-    if (isSignUp && (!name || !surname || !role)) {
-      setError("One of your fields is empty.");
-      return;
-    }
-  
-    setError(""); // Clear the error if credentials are correct
-    if (isSignUp) {
-      console.log("Sign Up", { name, surname, role, email, password });
-    } else {
-      console.log("Login", { email, password });
-    }
+
+    setError(""); // Clear the error if credentials are valid
+    console.log("Login successful!");
+    history.push("/home"); // Navigate to the Home page after successful login
   };
-  const toggleSignUp = () => {
-    setIsSignUp(!isSignUp); // Toggle between Sign Up and Login
-    setEmail(""); // Clear email field
-    setPassword(""); // Clear password field
-    setError(""); // Clear error messages
-  };
-  const toggleSignIn = () => {
-    setIsSignUp(isSignUp); // Toggle between Sign Up and Login
-    setEmail(""); // Clear email field
-    setPassword(""); // Clear password field
-    setError(""); // Clear error messages
-  };
+
   return (
     <IonPage>
       <IonContent className="ion-padding" style={{ textAlign: "center" }}>
@@ -65,42 +44,6 @@ const LoginPage = () => {
         </div>
         {/* Main Container */}
         <div className="main-container">
-          {/* Sign Up Fields */}
-          {isSignUp && (
-            <>
-              <InputField
-                label="Name"
-                type="text"
-                placeholder="Enter your name"
-                value={name}
-                onChange={setName}
-              />
-              <InputField
-                label="Surname"
-                type="text"
-                placeholder="Enter your surname"
-                value={surname}
-                onChange={setSurname}
-              />
-            </>
-          )}
-           {/* Role Selection */}
-           {isSignUp && (
-            <IonItem>
-              <IonLabel>User Type</IonLabel>
-              <IonSelect
-                value={role}
-                onIonChange={(e) => setRole(e.detail.value!)}
-              >
-                <IonSelectOption value="regular_user">
-                  Regular User
-                </IonSelectOption>
-                <IonSelectOption value="recipe_creator">
-                  Recipe Creator
-                </IonSelectOption>
-              </IonSelect>
-            </IonItem>
-          )}
           {/* Email Input */}
           <InputField
             label="Email"
@@ -123,19 +66,12 @@ const LoginPage = () => {
               {error}
             </p>
           )}
-         
-          {/* Action Button */}
-          <IonButton
-            expand="block"
-            className={`action-button ${isSignUp ? "signup-button" : ""}`}
-            onClick={handleFormSubmit}
-          >
-            {isSignUp ? "Sign Up" : "Login"}
+          {/* Login Button */}
+          <IonButton expand="block" onClick={handleFormSubmit}>
+            Login
           </IonButton>
-
           {/* Divider */}
           <div className="divider">Or login with</div>
-
           {/* Social Buttons */}
           <div className="social-buttons">
             <IonButton className="social-button facebook-button">
@@ -145,25 +81,15 @@ const LoginPage = () => {
               <IonIcon slot="icon-only" icon={logoGoogle} />
             </IonButton>
           </div>
-
           {/* Footer */}
-          <div className="footer">
-            {isSignUp ? (
-              <>
-                Already a member?{" "}
-                <span onClick={toggleSignUp}>Login here</span>
-              </>
-            ) : (
-              <>
-                Not a member?{" "}
-                <span
-                  onClick={toggleSignIn}
-                  style={{ color: "blue", cursor: "pointer" }}
-                >
-                  Sign up now
-                </span>
-              </>
-            )}
+          <div className="footer" style={{ marginTop: "20px" }}>
+            Not a member?{" "}
+            <span
+              onClick={() => history.push("/signup")} // Navigate to Sign-Up page
+              style={{ color: "blue", cursor: "pointer" }}
+            >
+              Sign up now
+            </span>
           </div>
         </div>
       </IonContent>
