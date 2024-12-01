@@ -25,6 +25,7 @@ const SignUpPage = () => {
       setError("One of your fields is empty.");
       return;
     }
+    
     setError(""); // Clear error if fields are valid
     console.log("Sign Up Successful!", {
       name,
