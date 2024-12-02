@@ -4,7 +4,7 @@ import { IonContent, IonPage, IonButton, IonIcon } from "@ionic/react";
 import { logoGoogle, logoFacebook } from "ionicons/icons";
 import InputField from "../components/InputField"; // Ensure this path matches your file structure
 import "./login.css";
-import { useLogin } from "../logics/UserCreationOrLogin";
+import { useLogin } from "../logics/LoginLogout";
 const LoginPage = () => {
   const history = useHistory();
   const {
@@ -13,9 +13,7 @@ const LoginPage = () => {
     password,
     setPassword,
     error,
-    handleNormalLogin,
-    handleGoogleSignIn,
-    handleFacebookSignIn,
+    handleLogin
   } = useLogin();
 
   return (
@@ -54,7 +52,7 @@ const LoginPage = () => {
           )}
 
           {/* Login Button */}
-          <IonButton expand="block" onClick={handleNormalLogin}>
+          <IonButton expand="block" onClick={handleLogin}>
             Login
           </IonButton>
 
@@ -65,14 +63,14 @@ const LoginPage = () => {
             {/* Facebook Login */}
             <IonButton
               className="social-button facebook-button"
-              onClick={handleFacebookSignIn}
+              onClick={handleLogin}
             >
               <IonIcon slot="icon-only" icon={logoFacebook} />
             </IonButton>
             {/* Google Login */}
             <IonButton
               className="social-button google-button"
-              onClick={handleGoogleSignIn}
+              onClick={handleLogin}
             >
               <IonIcon slot="icon-only" icon={logoGoogle} />
             </IonButton>
