@@ -1,9 +1,4 @@
-import {
-  IonButton,
-  IonButtons,
-  IonTitle,
-  IonToolbar,
-} from "@ionic/react";
+import { IonButton, IonButtons, IonTitle, IonToolbar } from "@ionic/react";
 import "./ToolBar.css";
 import BackButton from "./BackButton";
 import LogOut from "./LogOutButton";
@@ -21,11 +16,15 @@ const ToolBar: React.FC<Props> = (props) => {
         <IonTitle slot="end" size="large">
           {props.title}
         </IonTitle>
-        <IonButton onClick={() => makeUserRole("Admin", auth.currentUser?.uid || "")}>
+        <IonButton
+          onClick={() => makeUserRole("Admin", auth.currentUser?.uid || "")}
+        >
           be admin
         </IonButton>
         <IonButton
-          onClick={() => makeUserRole("ContentCreator", auth.currentUser?.uid || "")}
+          onClick={() =>
+            makeUserRole("ContentCreator", auth.currentUser?.uid || "")
+          }
         >
           be content creator
         </IonButton>

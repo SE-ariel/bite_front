@@ -1,18 +1,27 @@
-import { IonCard, IonCardContent, IonContent, IonHeader, IonInput, IonPage, IonTitle, IonToolbar } from '@ionic/react';
-import ExploreContainer from '../components/ExploreContainer';
-import './Home.css';
-import ToolBar from '../components/ToolBar';
-import { makeUserRole, useRoleStatus } from '../logics/Role';
+import {
+  IonCard,
+  IonCardContent,
+  IonContent,
+  IonHeader,
+  IonInput,
+  IonPage,
+  IonTitle,
+  IonToolbar,
+} from "@ionic/react";
+import ExploreContainer from "../components/ExploreContainer";
+import "./Home.css";
+import ToolBar from "../components/ToolBar";
+import { makeUserRole, useRoleStatus } from "../logics/Role";
 //import { getAdditionalUserInfo, getAuth } from 'firebase/auth';
-import { auth } from '../firebaseConfig';
+import { auth } from "../firebaseConfig";
 
 const Home: React.FC = () => {
   const role = useRoleStatus();
-  
+
   return (
     <IonPage>
       <IonHeader>
-        <ToolBar title='Home'/>
+        <ToolBar title="Home" />
       </IonHeader>
       <IonContent fullscreen>
         <IonHeader collapse="condense">
@@ -22,16 +31,13 @@ const Home: React.FC = () => {
         </IonHeader>
         <IonCard>
           <IonCardContent>
-          <IonTitle>
-          make user an admin
-          </IonTitle>
-          <IonInput
-              onIonInput={(e) => makeUserRole( (e.detail.value || ""), "" )}
+            <IonTitle>make user an admin</IonTitle>
+            <IonInput
+              onIonInput={(e) => makeUserRole(e.detail.value || "", "")}
               placeholder="email"
             />
-            </IonCardContent>
+          </IonCardContent>
         </IonCard>
-
         <ExploreContainer />
       </IonContent>
     </IonPage>
