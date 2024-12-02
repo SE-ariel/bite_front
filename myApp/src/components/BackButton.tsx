@@ -4,7 +4,7 @@ import { chevronBackOutline } from 'ionicons/icons';
 
 const BackButton: React.FC = () => {
   return (
-    <IonButton slot='start' color="danger" onClick={() => history.back()}>
+    <IonButton slot='start' onClick={() => history.back()}>
       <IonIcon icon={chevronBackOutline} size="large"/>
     </IonButton>
   );
