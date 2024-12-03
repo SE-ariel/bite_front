@@ -1,13 +1,22 @@
-import { IonContent, IonPage } from "@ionic/react";
+import {
+  IonCard,
+  IonCardContent,
+  IonCardHeader,
+  IonCardTitle,
+  IonContent,
+} from "@ionic/react";
 import "./Home.css";
-import Header from "../components/Header";
 
 const Home: React.FC = () => {
   return (
-    <IonPage>
-      <Header title="home" />
-      <IonContent fullscreen></IonContent>
-    </IonPage>
+    <IonContent fullscreen>
+      <IonCard>
+        <IonCardHeader>
+          <IonCardTitle>you are in the home page</IonCardTitle>
+        </IonCardHeader>
+        <IonCardContent>content</IonCardContent>
+      </IonCard>
+    </IonContent>
   );
 };
 
