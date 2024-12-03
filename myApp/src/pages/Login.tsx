@@ -1,3 +1,4 @@
+import React, { useState } from "react";
 import { useHistory } from "react-router-dom"; // Import useHistory from React Router v5
 import { IonContent, IonPage, IonButton, IonIcon } from "@ionic/react";
 import { logoGoogle, logoFacebook } from "ionicons/icons";
@@ -6,8 +7,14 @@ import "./login.css";
 import { useLogin } from "../logics/LoginLogout";
 const LoginPage = () => {
   const history = useHistory();
-  const { email, setEmail, password, setPassword, error, handleLogin } =
-    useLogin();
+  const {
+    email,
+    setEmail,
+    password,
+    setPassword,
+    error,
+    handleLogin
+  } = useLogin();
 
   return (
     <IonPage>
