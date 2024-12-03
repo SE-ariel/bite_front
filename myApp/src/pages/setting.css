@@ -1,0 +1,22 @@
+/* Setting.css */
+
+/* Centered title */
+.title {
+  text-align: center;
+  font-size: 30px;
+  font-weight: bold;
+}
+
+/* Padding for the main content */
+.content-button-container {
+    padding: 16px;
+    text-align: center;
+    height: 40px;
+    font-size: 20px;
+  }
+
+/* Icon styling for the back-to-home button */
+.home-icon {
+  margin-right: 8px;
+}
+
