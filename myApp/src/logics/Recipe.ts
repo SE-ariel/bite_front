@@ -1,7 +1,21 @@
 import { useState, useEffect } from "react";
 import { auth, db } from "../firebaseConfig";
-import { doc, setDoc, onSnapshot } from "firebase/firestore";
-import { onAuthStateChanged } from "firebase/auth";
+import {
+  doc,
+  getDoc,
+  setDoc,
+  onSnapshot,
+  collection,
+  getDocs,
+  query,
+  where,
+} from "firebase/firestore";
+import {
+  getAdditionalUserInfo,
+  getAuth,
+  onAuthStateChanged,
+  User,
+} from "firebase/auth";
 
 export const useRoleStatus = () => {
   const [role, setRole] = useState("");
@@ -50,7 +64,7 @@ export const useRoleStatus = () => {
 };
 
 // Optional: Function to create an admin document if needed
-export const makeUserRole = async (role: string, userKey: string) => {
+export const makeRecipe = async (role: string, userKey: string) => {
   try {
     const userinfo = doc(db, "users", userKey);
     await setDoc(userinfo, { Role: role }, { merge: true });
