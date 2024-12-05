@@ -2,8 +2,8 @@ import { Redirect, Route, Switch } from "react-router-dom";
 import { IonApp, IonRouterOutlet } from "@ionic/react";
 import { IonReactRouter } from "@ionic/react-router";
 
-import Login from "./test/Login";
-import Register from "./test/Register";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
 import NotFound from "./pages/NotFound";
 
 const LoggedOutRouter: React.FC = () => {
