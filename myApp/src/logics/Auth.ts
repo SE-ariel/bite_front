@@ -42,9 +42,11 @@ export const useAuth = (options: AuthHookOptions = {}) => {
       const userinfo = doc(db, "users", user.uid);
       const infoToAdd: Record<string, string> = {};
 
-      if (firstName) infoToAdd["FirstName"] = firstName;
-      if (surName) infoToAdd["SurName"] = surName;
-      if (role) infoToAdd["Role"] = role;
+      if (firstName) infoToAdd["firstName"] = firstName;
+      if (surName) infoToAdd["surName"] = surName;
+      if (role) infoToAdd["role"] = role;
+      if (email) infoToAdd["email"] = email;
+      infoToAdd["savedRecipes"] = "";
 
       await setDoc(userinfo, infoToAdd, { merge: true });
     } catch (err: any) {
