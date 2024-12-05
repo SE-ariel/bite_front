@@ -1,0 +1,14 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Allow authenticated users to write to the users collection
+    match /users/{userId} {
+      allow read, write: if request.auth != null;
+    }
+    
+    // Or, if you want more specific rules
+    match /users/{userId} {
+      allow read, write: if request.auth.uid == userId;
+    }
+  }
+}
