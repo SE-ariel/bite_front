@@ -37,4 +37,10 @@
     text-align: center;
     margin-top: 20px;
   }
-  
+  .ion-padding {
+    text-align: center;
+  }
+  .login {
+    color: #4267b2;
+    text-decoration: "underline";
+  }
