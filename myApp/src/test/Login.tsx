@@ -13,7 +13,6 @@ import {
   IonTitle,
   IonIcon,
 } from "@ionic/react";
-
 // Login Component Example
 const Login: React.FC = () => {
   const {
