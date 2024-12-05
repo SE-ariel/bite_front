@@ -17,7 +17,7 @@ export const useRoleStatus = () => {
             docRef,
             (docSnap) => {
               if (docSnap.exists()) {
-                const currentRole = docSnap.get("Role");
+                const currentRole = docSnap.get("role");
                 console.log("User Role is:", currentRole);
                 setRole(currentRole);
               } else {
@@ -53,7 +53,7 @@ export const useRoleStatus = () => {
 export const makeUserRole = async (role: string, userKey: string) => {
   try {
     const userinfo = doc(db, "users", userKey);
-    await setDoc(userinfo, { Role: role }, { merge: true });
+    await setDoc(userinfo, { role: role }, { merge: true });
     console.log(`Role updated to ${role}`);
   } catch (error) {
     console.error("Error creating/updating admin document: ", error);

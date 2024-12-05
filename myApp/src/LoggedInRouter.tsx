@@ -3,12 +3,13 @@ import { IonApp, IonRouterOutlet } from "@ionic/react";
 import { IonReactRouter } from "@ionic/react-router";
 import Home from "./pages/Home";
 
-import Login from "./test/Login";
-import Register from "./test/Register";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
 import LoggedInFrame from "./pages/LoggedInFrame";
 import PrivateZone from "./pages/PrivateZone";
 import Settings from "./pages/Settings";
 import NotFound from "./pages/NotFound";
+import Loading from "./pages/Loading";
 
 const LoggedInRouter: React.FC = () => {
   return (
@@ -38,6 +39,10 @@ const LoggedInRouter: React.FC = () => {
             {/* 404 Route - Always keep this last */}
             <Route path="/404">
               <NotFound />
+            </Route>
+            {/* Dynamic Profile Route */}
+            <Route path="/profile/:id?">
+              <LoggedInFrame title="profile" wrappedContent={Loading} />
             </Route>
             {/* 404 Route - Always keep this last */}
             <Route path="*">
