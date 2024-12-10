@@ -1,23 +1,12 @@
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/react';
-import ExploreContainer from '../components/ExploreContainer';
-import './Home.css';
-import ToolBar from '../components/ToolBar';
+import { IonContent } from "@ionic/react";
+import "./Home.css";
+import GoToProfile from "../components/GoToProfile";
 
 const Home: React.FC = () => {
   return (
-    <IonPage>
-      <IonHeader>
-        <ToolBar title='Home'/>
-      </IonHeader>
-      <IonContent fullscreen>
-        <IonHeader collapse="condense">
-          <IonToolbar>
-            <IonTitle size="large">Blank</IonTitle>
-          </IonToolbar>
-        </IonHeader>
-        <ExploreContainer />
-      </IonContent>
-    </IonPage>
+    <IonContent fullscreen>
+      <GoToProfile />
+    </IonContent>
   );
 };
 
