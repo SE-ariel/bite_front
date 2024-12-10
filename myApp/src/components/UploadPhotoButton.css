@@ -1,0 +1,26 @@
+/* UploadPhotoButton.css */
+.upload-photo-button {
+    margin-bottom: 20px;
+}
+
+.photo-label {
+    display: inline-block;
+    padding: 12px 24px;
+    background-color: #ff4961;
+    color: white;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.photo-label:hover {
+    background-color: red;
+}
+
+.photo-label:active {
+    background-color: red;
+}
+
+.hidden-input {
+    display: none;
+}

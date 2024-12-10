@@ -1,0 +1,26 @@
+/* PostContentField.css */
+.post-content-field {
+    margin-bottom: 20px;
+}
+
+.post-content-field label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: #333;
+}
+
+.content-textarea {
+    width: 100%;
+    height: 150px;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 16px;
+    background-color: #fff;
+}
+
+.content-textarea:focus {
+    border-color: black;
+    outline: none;
+}
