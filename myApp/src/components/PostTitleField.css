@@ -1,0 +1,25 @@
+/* PostTitleField.css */
+.post-title-field {
+    margin-bottom: 20px;
+}
+
+.post-title-field label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: #333;
+}
+
+.title-input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 16px;
+    background-color: #fff;
+}
+
+.title-input:focus {
+    border-color: black;
+    outline: none;
+}
