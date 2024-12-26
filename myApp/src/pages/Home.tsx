@@ -1,13 +1,12 @@
-import { IonContent, IonPage } from "@ionic/react";
+import { IonContent } from "@ionic/react";
 import "./Home.css";
-import Header from "../components/Header";
+import GoToProfile from "../components/GoToProfile";
 
 const Home: React.FC = () => {
   return (
-    <IonPage>
-      <Header title="home" />
-      <IonContent fullscreen></IonContent>
-    </IonPage>
+    <IonContent fullscreen>
+      <GoToProfile />
+    </IonContent>
   );
 };
 

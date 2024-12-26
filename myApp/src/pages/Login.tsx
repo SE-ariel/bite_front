@@ -1,89 +1,84 @@
-import React, { useState } from "react";
-import { useHistory } from "react-router-dom"; // Import useHistory from React Router v5
-import { IonContent, IonPage, IonButton, IonIcon } from "@ionic/react";
-import { logoGoogle, logoFacebook } from "ionicons/icons";
-import InputField from "../components/InputField"; // Ensure this path matches your file structure
-import "./login.css";
 import { useLogin } from "../logics/LoginLogout";
-const LoginPage = () => {
-  const history = useHistory();
+import { logoGoogle, logoFacebook } from "ionicons/icons";
+import "./Login.css";
+import {
+  IonButton,
+  IonContent,
+  IonInput,
+  IonPage,
+  IonIcon,
+  IonText,
+} from "@ionic/react";
+// Login Component Example
+const Login: React.FC = () => {
   const {
     email,
     setEmail,
     password,
     setPassword,
+    setProvider,
     error,
-    handleLogin
+    handleLogin,
   } = useLogin();
 
   return (
     <IonPage>
-      <IonContent className="ion-padding" style={{ textAlign: "center" }}>
+      <IonContent className="ion-padding">
         {/* Header */}
         <div className="header-icon">
           <img src="/public/favicon2.png" alt="App Logo" />
         </div>
-
-        {/* Main Container */}
         <div className="main-container">
-          {/* Email Input */}
-          <InputField
+          <IonInput
             label="Email"
+            labelPlacement="floating"
             type="email"
-            placeholder="Enter your email"
             value={email}
-            onChange={setEmail}
+            onIonInput={(e) => setEmail(e.detail.value || "")}
+            placeholder="Enter your email"
           />
-
-          {/* Password Input */}
-          <InputField
+          <IonInput
             label="Password"
+            labelPlacement="floating"
             type="password"
-            placeholder="Enter your password"
             value={password}
-            onChange={setPassword}
+            onIonInput={(e) => setPassword(e.detail.value || "")}
+            placeholder="Enter your password"
           />
-
-          {/* Error Message */}
-          {error && (
-            <p style={{ color: "red", marginTop: "10px", textAlign: "left" }}>
-              {error}
-            </p>
-          )}
-
-          {/* Login Button */}
+          {error && <IonText color="danger">{error}</IonText>}
           <IonButton expand="block" onClick={handleLogin}>
             Login
           </IonButton>
-
-          {/* Divider */}
           <div className="divider">Or login with</div>
-          {/* Social Buttons */}
           <div className="social-buttons">
-            {/* Facebook Login */}
             <IonButton
-              className="social-button facebook-button"
-              onClick={handleLogin}
-            >
-              <IonIcon slot="icon-only" icon={logoFacebook} />
-            </IonButton>
-            {/* Google Login */}
-            <IonButton
+              size="large"
               className="social-button google-button"
-              onClick={handleLogin}
+              onClick={() => {
+                setProvider("Google");
+                handleLogin();
+              }}
             >
-              <IonIcon slot="icon-only" icon={logoGoogle} />
+              <IonIcon size="large" slot="icon-only" icon={logoGoogle} />
+            </IonButton>
+            <IonButton
+              size="large"
+              className="social-button facebook-button"
+              onClick={() => {
+                setProvider("Facebook");
+                handleLogin();
+              }}
+            >
+              <IonIcon size="large" slot="icon-only" icon={logoFacebook} />
             </IonButton>
           </div>
-          {/* Footer */}
-          <div className="footer" style={{ marginTop: "20px" }}>
+          <div className="footer">
             Not a member?{" "}
-            <span
-              onClick={() => history.push("/signup")} // Navigate to Sign-Up page
-              style={{ color: "blue", cursor: "pointer" }}
+            <a className = "register"
+              href="/register"
             >
-              Sign up now
-            </span>
+              Sign up
+            </a>
           </div>
         </div>
       </IonContent>
@@ -91,4 +86,4 @@ const LoginPage = () => {
   );
 };
 
-export default LoginPage;
+export default Login;
