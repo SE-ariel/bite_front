@@ -72,10 +72,11 @@ const LoggedInRouter: React.FC = () => {
             <Route path="/profile/:id?">
               <LoggedInFrame title="profile" wrappedContent={Loading} />
             </Route>
-             {/* 404 Route - Always keep this last */}
-            <Route path="/404">
-              <NotFound />
+            {/* Dynamic Profile Route */}
+            <Route path="/recipe/:id?">
+              <LoggedInFrame title="profile" wrappedContent={Loading} />
             </Route>
+            {/* 404 Route - Always keep this last */}
             <Route path="*">
               <Redirect to="/404" />
             </Route>
