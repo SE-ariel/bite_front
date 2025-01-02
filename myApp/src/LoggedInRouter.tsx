@@ -48,8 +48,8 @@ const LoggedInRouter: React.FC = () => {
             <Route exact path="/settings">
               <LoggedInFrame title="settings" wrappedContent={Settings} />
             </Route>
-             {/* 404 Route - Always keep this last */}
-             <Route path="/404">
+            {/* 404 Route - Always keep this last */}
+            <Route path="/404">
               <NotFound />
             </Route>
             {/* Dynamic Profile Route */}
