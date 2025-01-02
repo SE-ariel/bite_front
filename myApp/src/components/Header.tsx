@@ -17,7 +17,7 @@ const Header: React.FC<Props> = (props) => {
           </IonTitle>
           {props.title !== "private zone" && 
             <PrivateZoneButton />}
-          {props.title !== "Home" && 
+          {props.title !== "home" && 
             <HomeButton />}
         </IonButtons>
       </IonToolbar>
