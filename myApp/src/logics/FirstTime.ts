@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { auth, db } from "../firebaseConfig";
 import { doc, getDoc } from "firebase/firestore";
 
-const useUserProfileCheck = () => {
+const useFirstTime = () => {
   const [isUserChecked, setIsUserChecked] = useState(false);
   const [needsSetup, setNeedsSetup] = useState(false);
 
@@ -26,4 +26,4 @@ const useUserProfileCheck = () => {
   return { isUserChecked, needsSetup };
 };
 
-export default useUserProfileCheck;
+export default useFirstTime;

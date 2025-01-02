@@ -8,14 +8,10 @@ import {
   IonSelect,
   IonSelectOption,
 } from "@ionic/react";
-import { setDoc, doc } from "firebase/firestore";
-import { auth, db } from "../firebaseConfig";
-import { useHistory } from "react-router";
 import { useRegister } from "../logics/Register";
 
 const SetupProfile: React.FC = () => {
-  const history = useHistory();
-  const [error, setError] = useState<string | null>(null);
+  const [error] = useState<string | null>(null);
 
   const {
     role,
@@ -24,23 +20,8 @@ const SetupProfile: React.FC = () => {
     setSurName,
     firstName,
     setFirstName,
+    handleSubmit,
   } = useRegister();
-
-  const handleSubmit = async () => {
-    const user = auth.currentUser;
-    if (!user) {
-      setError("User not logged in.");
-      return;
-    }
-
-    try {
-      const userRef = doc(db, "users", user.uid);
-      await setDoc(userRef, { firstName, surName, role }, { merge: true });
-      history.push("/home"); // Redirect to home after saving
-    } catch (err: any) {
-      setError("Failed to save details. Please try again.");
-    }
-  };
 
   return (
     <IonPage>

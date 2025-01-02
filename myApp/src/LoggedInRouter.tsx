@@ -11,10 +11,10 @@ import Settings from "./pages/Settings";
 import NotFound from "./pages/NotFound";
 import Loading from "./pages/Loading";
 import SetUpProfile from "./pages/SetupProfile";
-import useUserProfileCheck from "./logics/useUserProfileCheck";
+import useFirstTime from "./logics/FirstTime";
 
 const LoggedInRouter: React.FC = () => {
-  const { isUserChecked, needsSetup } = useUserProfileCheck();
+  const { isUserChecked, needsSetup } = useFirstTime();
 
   if (!isUserChecked) {
     return <Loading />;
@@ -47,6 +47,10 @@ const LoggedInRouter: React.FC = () => {
             </Route>
             <Route exact path="/settings">
               <LoggedInFrame title="settings" wrappedContent={Settings} />
+            </Route>
+             {/* 404 Route - Always keep this last */}
+             <Route path="/404">
+              <NotFound />
             </Route>
             {/* Dynamic Profile Route */}
             <Route path="/profile/:id?">
