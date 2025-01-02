@@ -6,29 +6,60 @@ import {
   IonCardTitle,
   IonContent,
   IonItem,
+  IonList,
   IonText,
 } from "@ionic/react";
-import "./Home.css";
-import { RecipeData } from "../logics/GetRecipe";
 
-interface Props {
-    recipeData: RecipeData;
+export interface RecipeData {
+  title: string;
+  creator: string;
+  ingredients: string[];
+  instructions: string[];
 }
 
-const Recipe: React.FC<Props> = (props) => {
+interface Props {
+  recipeData: RecipeData;
+}
+
+const Recipe: React.FC<Props> = ({ recipeData }) => {
   return (
     <IonContent fullscreen>
       <IonCard>
         <IonCardHeader>
-          <IonCardTitle>recipeData</IonCardTitle>
+        <IonText className="ion-text-center">
+            <IonCardTitle>{recipeData.title}</IonCardTitle>
+          </IonText>
         </IonCardHeader>
         <IonCardContent>
-        <IonItem>
-            <IonText>recipeData.title: {props.recipeData.title}</IonText>
+          <IonItem>
+            <IonText>Recipe Creator: {recipeData.creator}</IonText>
           </IonItem>
           <IonItem>
-            <IonText>recipeData.creator: {props.recipeData.creator}</IonText>
+            <IonText>
+              <strong>Ingredients:</strong>
+            </IonText>
           </IonItem>
+          <IonList>
+            {recipeData.ingredients.map((ingredient, index) => (
+              <IonItem key={index}>
+                <IonText>• {ingredient}</IonText>
+              </IonItem>
+            ))}
+          </IonList>
+          <IonItem>
+            <IonText>
+              <strong>Instructions:</strong>
+            </IonText>
+          </IonItem>
+          <IonList>
+            {recipeData.instructions.map((instruction, index) => (
+              <IonItem key={index}>
+                <IonText>
+                  {index + 1}. {instruction}
+                </IonText>
+              </IonItem>
+            ))}
+          </IonList>
         </IonCardContent>
       </IonCard>
     </IonContent>

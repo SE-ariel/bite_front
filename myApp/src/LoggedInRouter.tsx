@@ -1,8 +1,8 @@
+import React from "react";
 import { Redirect, Route, Switch } from "react-router-dom";
 import { IonApp, IonRouterOutlet } from "@ionic/react";
 import { IonReactRouter } from "@ionic/react-router";
 import Home from "./pages/Home";
-
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import LoggedInFrame from "./pages/LoggedInFrame";
@@ -10,14 +10,26 @@ import PrivateZone from "./pages/PrivateZone";
 import Settings from "./pages/Settings";
 import NotFound from "./pages/NotFound";
 import Loading from "./pages/Loading";
+import SetUpProfile from "./pages/SetupProfile";
+import useFirstTime from "./logics/FirstTime";
 
 const LoggedInRouter: React.FC = () => {
+  const { isUserChecked, needsSetup } = useFirstTime();
+
+  if (!isUserChecked) {
+    return <Loading />;
+  }
+
   return (
     <IonApp>
       <IonReactRouter>
+        {/* Redirect to setup page if user needs to complete profile */}
+        {needsSetup && <Redirect to="/setup" />}
+        
         <IonRouterOutlet>
           <Switch>
             {/* Public Routes */}
+            <Route path="/setup" component={SetUpProfile} exact />
             <Route path="/login" component={Login} exact />
             <Route path="/register" component={Register} exact />
             {/* Logged In Routes - Only render if logged in */}
