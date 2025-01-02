@@ -22,15 +22,15 @@ const GoToProfile: React.FC = () => {
   return (
     <IonCard>
       <IonCardHeader>
-        <IonCardTitle>User Data Lookup</IonCardTitle>
+        <IonCardTitle>Find User</IonCardTitle>
       </IonCardHeader>
       <IonCardContent>
         <IonInput
           value={userEmail}
-          placeholder="Enter User ID"
+          placeholder="Enter User email"
           onIonChange={(e) => setUserEmail(e.detail.value!)}
         />
-        <IonButton onClick={handleRoute}>Fetch Data</IonButton>
+        <IonButton onClick={handleRoute}>Take me to their profile!</IonButton>
       </IonCardContent>
     </IonCard>
   );
