@@ -3,7 +3,6 @@ import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonButton } from 
 import PostTitleField from '../components/PostTitleField';
 import PostContentField from '../components/PostContentField';
 import UploadPhotoButton from '../components/UploadPhotoButton';
-import ToolBar from '../components/ToolBar';
 import './CreatePost.css';
 
 const CreatePost: React.FC = () => {
@@ -25,9 +24,6 @@ const CreatePost: React.FC = () => {
 
     return (
         <IonPage>
-            <IonHeader>
-                <ToolBar title="Create a Recipe" />
-            </IonHeader>
             <IonContent fullscreen>
                 <div className="create-post-container">
                     <UploadPhotoButton onPhotoUpload={handlePhotoUpload} />
