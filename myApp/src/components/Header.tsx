@@ -1,6 +1,7 @@
 import { IonButtons, IonHeader, IonTitle, IonToolbar } from "@ionic/react";
 import BackButton from "./BackButton";
 import PrivateZoneButton from "./PrivateZoneButton";
+import HomeButton from "./HomeButton";
 interface Props {
   title: string;
 }
@@ -14,7 +15,10 @@ const Header: React.FC<Props> = (props) => {
           <IonTitle slot="end" size="large">
             {props.title}
           </IonTitle>
-          <PrivateZoneButton />
+          {props.title !== "private zone" && 
+            <PrivateZoneButton />}
+          {props.title !== "home" && 
+            <HomeButton />}
         </IonButtons>
       </IonToolbar>
     </IonHeader>
