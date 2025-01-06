@@ -47,50 +47,42 @@ export const useRecipe = (recipeId: string) => {
   return { recipe, error };
 };
 
+// Utility function to generate a custom ID
+const generateCustomId = (title: string): string => {
+    const sanitizedTitle = title.toLowerCase().replace(/[^a-z0-9]/g, "-"); // Replace spaces and special chars with "-"
+    const timestamp = Date.now(); // Get the current timestamp
+    return `${sanitizedTitle}-${timestamp}`;
+};
+
+// Updated makeRecipe function
 export const makeRecipe = async (recipeData: {
-  title: string;
-  instructions: string[];
-  ingredients: string[];
+    title: string;
+    ingredients: string[];
+    instructions: string[];
+    photoBase64?: string; // Optional field for photo
 }) => {
-  try {
-    const user = auth.currentUser; // Get the currently logged-in user
-    if (!user) {
-      throw new Error("No user is currently logged in.");
+    try {
+        const customId = generateCustomId(recipeData.title); // Generate custom ID
+
+        const recipeDocRef = doc(db, "recipes", customId); // Use custom ID for the recipe
+        await setDoc(recipeDocRef, {
+            title: recipeData.title,
+            ingredients: recipeData.ingredients,
+            instructions: recipeData.instructions,
+        });
+
+        // If there is a photo, save it as a separate field in the "images" collection
+        if (recipeData.photoBase64) {
+            const imageDocRef = doc(db, "images", customId); // Use the same ID for the image
+            await setDoc(imageDocRef, {
+                imageBase64: recipeData.photoBase64, // Base64 image data
+            });
+        }
+
+        console.log(`Recipe uploaded with ID: ${customId}`);
+        return customId; // Return the custom ID
+    } catch (error) {
+        console.error("Error uploading recipe:", error);
+        throw error;
     }
-
-    // Get the user's document
-    const userDocRef = doc(db, "users", user.uid);
-    const userSnapshot = await getDoc(userDocRef);
-    console.log("User document data:", userSnapshot.data()); // Debugging log
-
-    if (!userSnapshot.exists()) {
-      throw new Error("User document does not exist.");
-    }
-
-    const userName = userSnapshot.data()?.SurName || "Unknown User";
-    
-    // Add creator's name to the recipe data
-    const completeRecipeData = {
-      ...recipeData,
-      creator: userName,
-    };
-
-    console.log("Recipe data to be added:", completeRecipeData); // Debugging log
-
-    // Add the recipe to the "recipes" collection
-    const recipeRef = await addDoc(collection(db, "recipes"), completeRecipeData);
-
-    // Add the recipe ID to the user's "recipes" array
-    await updateDoc(userDocRef, {
-      recipes: arrayUnion(recipeRef.id), // Add the recipe ID to the array
-    });
-
-    console.log(
-      `Recipe "${recipeData.title}" created successfully by ${userName}. Recipe ID: ${recipeRef.id}`
-    );
-    return recipeRef.id; // Return the unique ID for further use
-  } catch (error) {
-    console.error("Error creating recipe document: ", error);
-    throw error;
-  }
 };

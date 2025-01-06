@@ -21,47 +21,47 @@ export const useUploadImage = (documentId: string) => {
     return uploadImage;
 };
 
-const captureImage = async (): Promise<string | null> => {
-    console.log("capture Image");
+export const captureImage = async (): Promise<string | null> => {
+  console.log("capture Image");
 
-    if (Capacitor.isNativePlatform()) {
-        // Use Capacitor Camera on native platforms
-        try {
-            await Camera.requestPermissions();
-            const image = await Camera.getPhoto({
-                resultType: CameraResultType.DataUrl,
-                source: CameraSource.Prompt,
-                quality: 50,
-            });
-            console.log("image found");
-            return image.dataUrl as string;
-        } catch (error) {
-            console.error('Error capturing image:', error);
-            return null;
-        }
-    } else {
-        // Use file input for web
-        return new Promise((resolve) => {
-            const input = document.createElement('input');
-            input.type = 'file';
-            input.accept = 'image/*';
+  if (Capacitor.isNativePlatform()) {
+      // Use Capacitor Camera on native platforms
+      try {
+          await Camera.requestPermissions();
+          const image = await Camera.getPhoto({
+              resultType: CameraResultType.DataUrl,
+              source: CameraSource.Prompt,
+              quality: 50,
+          });
+          console.log("image found");
+          return image.dataUrl as string;
+      } catch (error) {
+          console.error('Error capturing image:', error);
+          return null;
+      }
+  } else {
+      // Use file input for web
+      return new Promise((resolve) => {
+          const input = document.createElement('input');
+          input.type = 'file';
+          input.accept = 'image/*';
 
-            input.onchange = async (e) => {
-                const file = (e.target as HTMLInputElement).files?.[0];
-                if (file) {
-                    const reader = new FileReader();
-                    reader.onload = () => {
-                        resolve(reader.result as string);
-                    };
-                    reader.readAsDataURL(file);
-                } else {
-                    resolve(null);
-                }
-            };
+          input.onchange = async (e) => {
+              const file = (e.target as HTMLInputElement).files?.[0];
+              if (file) {
+                  const reader = new FileReader();
+                  reader.onload = () => {
+                      resolve(reader.result as string);
+                  };
+                  reader.readAsDataURL(file);
+              } else {
+                  resolve(null);
+              }
+          };
 
-            input.click();
-        });
-    }
+          input.click();
+      });
+  }
 };
 
 export const compressImage = async (dataUrl: string): Promise<string> => {
