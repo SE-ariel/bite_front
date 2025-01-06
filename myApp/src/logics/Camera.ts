@@ -2,14 +2,17 @@ import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
 import imageCompression from 'browser-image-compression';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
 import { db } from '../firebaseConfig';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useCallback } from 'react';
+import { Capacitor } from '@capacitor/core';
 
 export const useUploadImage = (documentId: string) => {
     const uploadImage = useCallback(async () => {
         const image = await captureImage();
-        const compressedImage = await compressImage(image);
-        await uploadImageToFirestore(compressedImage, documentId);
+        if (image) {
+            const compressedImage = await compressImage(image);
+            await uploadImageToFirestore(compressedImage, documentId);
+        }
     }, [documentId]);
 
     useEffect(() => {
@@ -18,17 +21,47 @@ export const useUploadImage = (documentId: string) => {
     return uploadImage;
 };
 
-const captureImage = async () => {
-  console.log("capture Image");
-  await Camera.requestPermissions();
-  const image = await Camera.getPhoto({
-    resultType: CameraResultType.DataUrl,
-    source: CameraSource.Prompt, // Allows user to choose between camera and gallery
-    quality: 50, // Adjust quality as needed
-  });
-  console.log("image found");
-
-  return image.dataUrl as string;
+const captureImage = async (): Promise<string | null> => {
+    console.log("capture Image");
+    
+    if (Capacitor.isNativePlatform()) {
+        // Use Capacitor Camera on native platforms
+        try {
+            await Camera.requestPermissions();
+            const image = await Camera.getPhoto({
+                resultType: CameraResultType.DataUrl,
+                source: CameraSource.Prompt,
+                quality: 50,
+            });
+            console.log("image found");
+            return image.dataUrl as string;
+        } catch (error) {
+            console.error('Error capturing image:', error);
+            return null;
+        }
+    } else {
+        // Use file input for web
+        return new Promise((resolve) => {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = 'image/*';
+            
+            input.onchange = async (e) => {
+                const file = (e.target as HTMLInputElement).files?.[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = () => {
+                        resolve(reader.result as string);
+                    };
+                    reader.readAsDataURL(file);
+                } else {
+                    resolve(null);
+                }
+            };
+            
+            input.click();
+        });
+    }
 };
 
 export const compressImage = async (dataUrl: string): Promise<string> => {
@@ -78,11 +111,11 @@ export const uploadImageToFirestore = async (imageDataUrl: string, documentId: s
     image: imageBase64,
     // Add other fields as necessary
   };
-  await setDoc(doc(db, 'recipes', documentId), imageData);
+  await setDoc(doc(db, 'images', documentId), imageData);
 };
 
 export const getImageFromFirestore = async (documentId: string) => {
-    const docRef = doc(db, 'recipes', documentId);
+    const docRef = doc(db, 'images', documentId);
     const docSnap = await getDoc(docRef);
     if (docSnap.exists()) {
       const imageBase64 = docSnap.data().image;
@@ -108,4 +141,28 @@ export const DisplayImage = ({ documentId }: { documentId: string }) => {
   }, [documentId]);
 
   return imageSrc;
+};
+
+export const useFirestoreImage = (documentId: string) => {
+  const [imageSrc, setImageSrc] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchImage = async () => {
+      setIsLoading(true);
+      try {
+        const imageDataUrl = await getImageFromFirestore(documentId);
+        setImageSrc(imageDataUrl || null);
+      } catch (error) {
+        console.error('Error fetching image:', error);
+        setImageSrc(null);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    
+    fetchImage();
+  }, [documentId]);
+
+  return { imageSrc, isLoading };
 };

@@ -24,16 +24,16 @@ export const data = async (uid: string) => {
 
 export interface RecipeData {
   creator: string; // Corrected casing to camelCase
-  ingredients: string; // Replaced SurName with standard lastName
-  instructions: string;
+  ingredients: string[]; // Replaced SurName with standard lastName
+  instructions: string[];
   title: string;
 }
 
 export const useRecipe = (id: string) => {
   const [recipeData, setRecipeData] = useState<RecipeData>({
     creator: "",
-    ingredients: "",
-    instructions: "",
+    ingredients: [""],
+    instructions: [""],
     title: "",
   });
   const [isChecked, setIsChecked] = useState(false);
@@ -45,8 +45,8 @@ export const useRecipe = (id: string) => {
           // Type assertion or mapping
           setRecipeData({
             creator: result.creator || "",
-            ingredients: result.ingredients || "",
-            instructions: result.instructions || "",
+            ingredients: result.ingredients || [""],
+            instructions: result.instructions || [""],
             title: result.title || "",
           });
         }
