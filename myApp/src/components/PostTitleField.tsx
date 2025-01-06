@@ -1,5 +1,5 @@
 import React from 'react';
-import './PostTitleField.css';
+import { IonItem, IonLabel, IonInput } from '@ionic/react';
 
 interface PostTitleFieldProps {
     title: string;
@@ -8,19 +8,20 @@ interface PostTitleFieldProps {
 
 const PostTitleField: React.FC<PostTitleFieldProps> = ({ title, setTitle }) => {
     return (
-        <div className="post-title-field">
-            <label htmlFor="title">Recipe Title:</label>
-            <input
-                id="title"
-                type="text"
+        <IonItem lines="full">
+            <IonLabel position="stacked" color="primary">
+                Recipe Title
+            </IonLabel>
+            <IonInput
                 value={title}
-                onChange={(e) => setTitle(e.target.value)}
+                onIonChange={(e) => setTitle(e.detail.value!)}
                 placeholder="Enter the recipe title"
-                className="title-input"
+                className="ion-input"
             />
-        </div>
+        </IonItem>
     );
 };
 
 export default PostTitleField;
+
 

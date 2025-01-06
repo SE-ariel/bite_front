@@ -1,10 +1,7 @@
 import { useState, useEffect } from "react";
 import { db } from "../firebaseConfig";
-import {
-  doc,
-  getDoc,
-  DocumentData,
-} from "firebase/firestore";
+import { doc, getDoc, DocumentData } from "firebase/firestore";
+import { RecipeData } from "./RecipeData";
 
 export const data = async (uid: string) => {
   try {
@@ -22,31 +19,26 @@ export const data = async (uid: string) => {
   }
 };
 
-export interface RecipeData {
-  creator: string; // Corrected casing to camelCase
-  ingredients: string; // Replaced SurName with standard lastName
-  instructions: string;
-  title: string;
-}
-
 export const useRecipe = (id: string) => {
   const [recipeData, setRecipeData] = useState<RecipeData>({
     creator: "",
-    ingredients: "",
-    instructions: "",
+    ingredients: [], // Initialize as an array
+    instructions: [],
     title: "",
   });
   const [isChecked, setIsChecked] = useState(false);
+
   useEffect(() => {
     const fetchRecipeData = async () => {
       try {
         const result: DocumentData | null = await data(id || "");
         if (result) {
-          // Type assertion or mapping
           setRecipeData({
             creator: result.creator || "",
-            ingredients: result.ingredients || "",
-            instructions: result.instructions || "",
+            ingredients: Array.isArray(result.ingredients)
+              ? result.ingredients
+              : result.ingredients.split(",").map((item: string) => item.trim()), // Normalize ingredients to an array
+            instructions: result.instructions || [],
             title: result.title || "",
           });
         }
@@ -60,3 +52,4 @@ export const useRecipe = (id: string) => {
 
   return { recipeData, isChecked };
 };
+

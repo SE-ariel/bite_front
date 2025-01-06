@@ -1,5 +1,6 @@
 import React from 'react';
-import './UploadPhotoButton.css';
+import { IonButton, IonIcon } from '@ionic/react';
+import { cameraOutline } from 'ionicons/icons';
 
 interface UploadPhotoButtonProps {
     onPhotoUpload: (file: File) => void;
@@ -13,15 +14,25 @@ const UploadPhotoButton: React.FC<UploadPhotoButtonProps> = ({ onPhotoUpload }) 
     };
 
     return (
-        <div className="upload-photo-button">
-            <label htmlFor="photo-upload" className="photo-label">Upload Photo / Use Camera</label>
+        <div>
+            {/* Hidden input for file selection */}
             <input
                 id="photo-upload"
                 type="file"
                 accept="image/*"
                 onChange={handleFileChange}
-                className="hidden-input"
+                style={{ display: 'none' }}
             />
+
+            {/* Styled Ionic Button */}
+            <IonButton
+                color="primary"
+                expand="block"
+                onClick={() => document.getElementById('photo-upload')?.click()} // Opens file input
+            >
+                <IonIcon icon={cameraOutline} slot="start" />
+                Upload Photo / Use Camera
+            </IonButton>
         </div>
     );
 };

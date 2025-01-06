@@ -47,6 +47,7 @@ const RecipeLogic: React.FC<PathProps> = (recipeProps) => {
     if (recipeData.title == "") {
       return <NotFound />;
     } else {
+      
       return (
         <IonPage>
           <Header title={recipeProps.title} />

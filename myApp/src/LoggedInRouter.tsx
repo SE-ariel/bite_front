@@ -12,6 +12,8 @@ import NotFound from "./pages/NotFound";
 import Loading from "./pages/Loading";
 import SetUpProfile from "./pages/SetupProfile";
 import useFirstTime from "./logics/FirstTime";
+import CreatePost from "./pages/CreatePost";
+import CreateRecipe from "./pages/CreateRecipe"; // Import CreateRecipe
 
 const LoggedInRouter: React.FC = () => {
   const { isUserChecked, needsSetup } = useFirstTime();
@@ -36,14 +38,13 @@ const LoggedInRouter: React.FC = () => {
             <Route exact path="/home">
               <LoggedInFrame title="home" wrappedContent={Home} />
             </Route>
+            <Route path="/create-post" component={CreatePost} exact /> {/* Add here */}
+            <Route path="/create-recipe" component={CreateRecipe} exact /> {/* Add here */}
             <Route exact path="/">
               <Redirect to="/home" />
             </Route>
             <Route exact path="/private">
-              <LoggedInFrame
-                title="private zone"
-                wrappedContent={PrivateZone}
-              />
+              <LoggedInFrame title="private zone" wrappedContent={PrivateZone} />
             </Route>
             <Route exact path="/settings">
               <LoggedInFrame title="settings" wrappedContent={Settings} />
@@ -72,3 +73,5 @@ const LoggedInRouter: React.FC = () => {
 };
 
 export default LoggedInRouter;
+
+

@@ -1,5 +1,5 @@
 import React from 'react';
-import './PostContentField.css';
+import { IonItem, IonLabel, IonTextarea } from '@ionic/react';
 
 interface PostContentFieldProps {
     content: string;
@@ -8,16 +8,18 @@ interface PostContentFieldProps {
 
 const PostContentField: React.FC<PostContentFieldProps> = ({ content, setContent }) => {
     return (
-        <div className="post-content-field">
-            <label htmlFor="content">Recipe Content:</label>
-            <textarea
-                id="content"
+        <IonItem lines="full">
+            <IonLabel position="stacked" color="primary">
+                Recipe Content
+            </IonLabel>
+            <IonTextarea
                 value={content}
-                onChange={(e) => setContent(e.target.value)}
+                onIonChange={(e) => setContent(e.detail.value!)}
                 placeholder="Enter ingredients and directions"
-                className="content-textarea"
-            ></textarea>
-        </div>
+                autoGrow={true} // Allows the textarea to grow with content
+                className="ion-textarea"
+            />
+        </IonItem>
     );
 };
 
