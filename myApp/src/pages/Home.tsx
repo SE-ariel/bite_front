@@ -13,4 +13,5 @@ const Home: React.FC = () => {
     </IonContent>
   );
 };
+
 export default Home;
