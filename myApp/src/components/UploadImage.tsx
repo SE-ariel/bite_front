@@ -1,26 +1,16 @@
 import { IonButton, IonSpinner } from "@ionic/react";
-import { useState } from "react";
 import { useUploadImage } from "../logics/Camera";
 
 interface Props {
-    id: string;
+    onUpload?: (id: string) => void;
 }
 
-const UploadImage: React.FC<Props> = (props) => {
-    const [isLoading, setIsLoading] = useState(false);
-    const uploadImage = useUploadImage(props.id);
-
-    const handleUpload = async () => {
-        setIsLoading(true);
-        try {
-            await uploadImage();
-        } finally {
-            setIsLoading(false);
-        }
-    };
+const UploadImage: React.FC<Props> = ({ onUpload }) => {
+    const { handleUpload, isLoading } = useUploadImage(onUpload);
 
     return (
         <IonButton 
+            expand="block"
             onClick={handleUpload} 
             disabled={isLoading}
         >
