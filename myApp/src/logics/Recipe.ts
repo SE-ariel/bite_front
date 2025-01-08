@@ -3,14 +3,13 @@ import { auth, db } from "../firebaseConfig";
 import {
   doc,
   getDoc,
-  setDoc,
   onSnapshot,
   collection,
   addDoc,
   updateDoc,
   arrayUnion,
+  serverTimestamp,
 } from "firebase/firestore";
-import { onAuthStateChanged } from "firebase/auth";
 
 export const useRecipe = (recipeId: string) => {
   const [recipe, setRecipe] = useState<any>(null);
@@ -23,7 +22,6 @@ export const useRecipe = (recipeId: string) => {
     }
 
     const docRef = doc(db, "recipes", recipeId);
-
     const unsubscribe = onSnapshot(
       docRef,
       (docSnap) => {
@@ -61,7 +59,6 @@ export const makeRecipe = async (recipeData: {
     // Get the user's document
     const userDocRef = doc(db, "users", user.uid);
     const userSnapshot = await getDoc(userDocRef);
-    console.log("User document data:", userSnapshot.data()); // Debugging log
 
     if (!userSnapshot.exists()) {
       throw new Error("User document does not exist.");
@@ -73,9 +70,9 @@ export const makeRecipe = async (recipeData: {
     const completeRecipeData = {
       ...recipeData,
       creator: userName,
+      createdAt: serverTimestamp()
     };
 
-    console.log("Recipe data to be added:", completeRecipeData); // Debugging log
 
     // Add the recipe to the "recipes" collection
     const recipeRef = await addDoc(collection(db, "recipes"), completeRecipeData);
@@ -85,12 +82,36 @@ export const makeRecipe = async (recipeData: {
       recipes: arrayUnion(recipeRef.id), // Add the recipe ID to the array
     });
 
-    console.log(
-      `Recipe "${recipeData.title}" created successfully by ${userName}. Recipe ID: ${recipeRef.id}`
-    );
     return recipeRef.id; // Return the unique ID for further use
   } catch (error) {
     console.error("Error creating recipe document: ", error);
     throw error;
   }
+};
+
+export const handlePostUpload = async (
+    title: string,
+    ingredients: string,
+    instructions: string,
+    imageId: string,
+    setError: (error: string | null) => void,
+) => {
+    if (!title || !ingredients || !instructions) {
+        setError("Title, ingredients, and instructions are required!");
+        return;
+    }
+
+    try {
+        const recipeData = {
+            title,
+            ingredients: ingredients.split("\n"),
+            instructions: instructions.split("\n"),
+            imageId,
+        };
+        await makeRecipe(recipeData);
+        history.back();
+    } catch (error) {
+        console.error("Error uploading post:", error);
+        setError("Failed to upload post. Please try again.");
+    }
 };
