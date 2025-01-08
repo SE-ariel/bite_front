@@ -40,9 +40,6 @@ const LoggedInRouter: React.FC = () => {
             <Route exact path="/">
               <Redirect to="/home" />
             </Route>
-            <Route exact path="/">
-              <Redirect to="/home" />
-            </Route>
             <Route exact path="/private">
               <LoggedInFrame
                 title="private zone"
