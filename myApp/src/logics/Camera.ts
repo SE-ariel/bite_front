@@ -1,31 +1,38 @@
 import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
 import imageCompression from 'browser-image-compression';
-import { doc, getDoc, setDoc } from 'firebase/firestore';
+import { doc, getDoc, setDoc, collection } from 'firebase/firestore';
 import { db } from '../firebaseConfig';
-import { useEffect, useState, useRef } from 'react';
-import { useCallback } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { Capacitor } from '@capacitor/core';
 
-export const useUploadImage = (documentId: string) => {
-    const uploadImage = useCallback(async () => {
-        const image = await captureImage();
-        if (image) {
-            const compressedImage = await compressImage(image);
-            await uploadImageToFirestore(compressedImage, documentId);
+export const useUploadImage = (onUpload?: (id: string) => void) => {
+    const [isLoading, setIsLoading] = useState(false);
+    
+    const handleUpload = useCallback(async () => {
+        setIsLoading(true);
+        try {
+            const image = await captureImage();
+            if (image) {
+                const compressedImage = await compressImage(image);
+                const newDocRef = doc(collection(db, 'images'));
+                await uploadImageToFirestore(compressedImage, newDocRef.id);
+                if (onUpload) {
+                    onUpload(newDocRef.id);
+                }
+                return newDocRef.id;
+            }
+        } finally {
+            setIsLoading(false);
         }
-    }, [documentId]);
+    }, [onUpload]);
 
-    useEffect(() => {
-        uploadImage();
-    }, [uploadImage]);
-    return uploadImage;
+    return { handleUpload, isLoading };
 };
 
 const captureImage = async (): Promise<string | null> => {
     console.log("capture Image");
 
     if (Capacitor.isNativePlatform()) {
-        // Use Capacitor Camera on native platforms
         try {
             await Camera.requestPermissions();
             const image = await Camera.getPhoto({
@@ -40,7 +47,6 @@ const captureImage = async (): Promise<string | null> => {
             return null;
         }
     } else {
-        // Use file input for web
         return new Promise((resolve) => {
             const input = document.createElement('input');
             input.type = 'file';
@@ -57,6 +63,11 @@ const captureImage = async (): Promise<string | null> => {
                 } else {
                     resolve(null);
                 }
+            };
+
+            // Handle the case when user closes the popup without selecting a file
+            input.oncancel = () => {
+                resolve(null);
             };
 
             input.click();
