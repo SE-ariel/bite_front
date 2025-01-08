@@ -12,6 +12,7 @@ import NotFound from "./pages/NotFound";
 import Loading from "./pages/Loading";
 import SetUpProfile from "./pages/SetupProfile";
 import useFirstTime from "./logics/FirstTime";
+import CreatePost from "./pages/CreatePost";
 
 const LoggedInRouter: React.FC = () => {
   const { isUserChecked, needsSetup } = useFirstTime();
@@ -43,6 +44,12 @@ const LoggedInRouter: React.FC = () => {
               <LoggedInFrame
                 title="private zone"
                 wrappedContent={PrivateZone}
+              />
+            </Route>
+            <Route exact path="/create">
+              <LoggedInFrame
+                title="Create Post"
+                wrappedContent={CreatePost}
               />
             </Route>
             <Route exact path="/settings">
