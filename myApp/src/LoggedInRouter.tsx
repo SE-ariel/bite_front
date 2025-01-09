@@ -13,6 +13,7 @@ import Loading from "./pages/Loading";
 import SetUpProfile from "./pages/SetupProfile";
 import useFirstTime from "./logics/FirstTime";
 import CreatePost from "./pages/CreatePost";
+import Notifications from "./pages/Notifications";
 
 const LoggedInRouter: React.FC = () => {
   const { isUserChecked, needsSetup } = useFirstTime();
@@ -54,6 +55,9 @@ const LoggedInRouter: React.FC = () => {
             </Route>
             <Route exact path="/settings">
               <LoggedInFrame title="settings" wrappedContent={Settings} />
+            </Route>            
+            <Route exact path="/notifications">
+              <LoggedInFrame title="notifications" wrappedContent={Notifications} />
             </Route>
             {/* 404 Route - Always keep this last */}
             <Route path="/404">
