@@ -62,14 +62,11 @@ export const makeRecipe = async (recipeData: {
 
     if (!userSnapshot.exists()) {
       throw new Error("User document does not exist.");
-    }
-
-    const userName = userSnapshot.data()?.SurName || "Unknown User";
-    
+    }    
     // Add creator's name to the recipe data
     const completeRecipeData = {
       ...recipeData,
-      creator: userName,
+      creatorId: user.uid,
       createdAt: serverTimestamp()
     };
 
