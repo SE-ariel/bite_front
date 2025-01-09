@@ -30,7 +30,7 @@ const ProfileLogic: React.FC<PathProps> = (profileProps) => {
         <IonPage>
           <Header title={profileProps.title} />
           <IonContent>
-            <Profile userData={userData} />
+            <Profile userData={userData} userID={profileProps.path} />
           </IonContent>
         </IonPage>
       );

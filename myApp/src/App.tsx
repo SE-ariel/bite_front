@@ -1,3 +1,4 @@
+import React from 'react';
 import { IonApp, setupIonicReact } from "@ionic/react";
 
 /* Core CSS required for Ionic components to work properly */
@@ -33,11 +34,14 @@ import { useLoggedIn } from "./logics/Auth";
 import Loading from "./pages/Loading";
 import LoggedInRouter from "./LoggedInRouter";
 import LoggedOutRouter from "./LoggedOutRouter";
+import { useNotifications } from './logics/Notifications';
 
 setupIonicReact();
 
 const App: React.FC = () => {
   const { isLoggedIn, isLoading } = useLoggedIn();
+
+  useNotifications();
 
   if (isLoading) {
     return (
