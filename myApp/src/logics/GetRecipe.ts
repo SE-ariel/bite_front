@@ -27,6 +27,7 @@ export interface RecipeData {
   ingredients: string; // Replaced SurName with standard lastName
   instructions: string;
   title: string;
+  imageId: string;
 }
 
 export const useRecipe = (id: string) => {
@@ -35,6 +36,7 @@ export const useRecipe = (id: string) => {
     ingredients: "",
     instructions: "",
     title: "",
+    imageId: "",
   });
   const [isChecked, setIsChecked] = useState(false);
   useEffect(() => {
@@ -48,7 +50,7 @@ export const useRecipe = (id: string) => {
             ingredients: result.ingredients || "",
             instructions: result.instructions || "",
             title: result.title || "",
-          });
+            imageId: result.imageId || "",});
         }
         setIsChecked(true);
       } catch (error) {

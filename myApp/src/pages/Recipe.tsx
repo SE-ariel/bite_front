@@ -9,12 +9,14 @@ import {
   IonList,
   IonText,
 } from "@ionic/react";
+import ImageDisplay from "../components/ImageDisplay";
 
 export interface RecipeData {
   title: string;
   creator: string;
   ingredients: string[];
   instructions: string[];
+  imageId: string;
 }
 
 interface Props {
@@ -26,7 +28,7 @@ const Recipe: React.FC<Props> = ({ recipeData }) => {
     <IonContent fullscreen>
       <IonCard>
         <IonCardHeader>
-        <IonText className="ion-text-center">
+          <IonText className="ion-text-center">
             <IonCardTitle>{recipeData.title}</IonCardTitle>
           </IonText>
         </IonCardHeader>
@@ -61,6 +63,9 @@ const Recipe: React.FC<Props> = ({ recipeData }) => {
             ))}
           </IonList>
         </IonCardContent>
+        {recipeData.imageId && recipeData.imageId.length > 0 && (
+          <ImageDisplay documentId={recipeData.imageId} />
+        )}
       </IonCard>
     </IonContent>
   );
