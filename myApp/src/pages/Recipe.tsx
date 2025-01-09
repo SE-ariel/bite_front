@@ -11,8 +11,10 @@ import {
   IonText,
 } from "@ionic/react";
 import ImageDisplay from "../components/ImageDisplay";
+import Rate from "../components/Rate";
 
 export interface RecipeData {
+  recipeId: string;
   title: string;
   creatorId: string;
   ingredients: string[];
@@ -70,6 +72,7 @@ const Recipe: React.FC<Props> = ({ recipeData }) => {
       <IonButton expand="block" href={linkToCreator}>
         go to creator page
       </IonButton>
+      <Rate recipeId={recipeData.recipeId} />
     </IonContent>
   );
 };

@@ -23,6 +23,7 @@ export const data = async (uid: string) => {
 };
 
 export interface RecipeData {
+  recipeId: string;
   creatorId: string; // Corrected casing to camelCase
   ingredients: string; // Replaced SurName with standard lastName
   instructions: string;
@@ -32,6 +33,7 @@ export interface RecipeData {
 
 export const useRecipe = (id: string) => {
   const [recipeData, setRecipeData] = useState<RecipeData>({
+    recipeId: "",
     creatorId: "",
     ingredients: "",
     instructions: "",
@@ -47,6 +49,7 @@ export const useRecipe = (id: string) => {
         if (result) {
           // Type assertion or mapping
           setRecipeData({
+            recipeId: id,
             creatorId: result.creatorId || "",
             ingredients: result.ingredients || "",
             instructions: result.instructions || "",
