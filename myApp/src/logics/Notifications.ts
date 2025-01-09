@@ -9,8 +9,6 @@ import {
   limit,
   onSnapshot,
   getDoc,
-  addDoc,
-  getDocs,
   setDoc,
 } from "firebase/firestore";
 import { db, auth } from "../firebaseConfig";
@@ -96,6 +94,7 @@ const listenForNewPosts = () => {
                 recipeId: change.doc.id,
                 read: false,
                 type: "new_recipe",
+                createdAt: recipe.createdAt,
               };
               const docRef = doc(db, "notifications", documentId);
 
