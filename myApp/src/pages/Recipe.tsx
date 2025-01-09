@@ -1,5 +1,6 @@
 import React from "react";
 import {
+  IonButton,
   IonCard,
   IonCardContent,
   IonCardHeader,
@@ -13,7 +14,7 @@ import ImageDisplay from "../components/ImageDisplay";
 
 export interface RecipeData {
   title: string;
-  creator: string;
+  creatorId: string;
   ingredients: string[];
   instructions: string[];
   imageId: string;
@@ -24,6 +25,8 @@ interface Props {
 }
 
 const Recipe: React.FC<Props> = ({ recipeData }) => {
+  const linkToCreator = "/profile/" + recipeData.creatorId;
+  console.log(linkToCreator);
   return (
     <IonContent fullscreen>
       <IonCard>
@@ -33,9 +36,6 @@ const Recipe: React.FC<Props> = ({ recipeData }) => {
           </IonText>
         </IonCardHeader>
         <IonCardContent>
-          <IonItem>
-            <IonText>Recipe Creator: {recipeData.creator}</IonText>
-          </IonItem>
           <IonItem>
             <IonText>
               <strong>Ingredients:</strong>
@@ -67,6 +67,9 @@ const Recipe: React.FC<Props> = ({ recipeData }) => {
           <ImageDisplay documentId={recipeData.imageId} />
         )}
       </IonCard>
+      <IonButton expand="block" href={linkToCreator}>
+        go to creator page
+      </IonButton>
     </IonContent>
   );
 };
