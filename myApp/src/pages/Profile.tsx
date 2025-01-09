@@ -10,9 +10,11 @@ import {
 } from "@ionic/react";
 import "./Home.css";
 import { UserData } from "../logics/Profile";
+import FollowButton from "../components/FollowButton";
 
 interface Props {
   userData: UserData;
+  userID: string;
 }
 
 const Profile: React.FC<Props> = (props) => {
@@ -34,6 +36,7 @@ const Profile: React.FC<Props> = (props) => {
           </IonItem>
         </IonCardContent>
       </IonCard>
+      <FollowButton otherUserID={props.userID} />
     </IonContent>
   );
 };
