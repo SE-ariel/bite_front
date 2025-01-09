@@ -46,8 +46,10 @@ const SetupProfile: React.FC = () => {
           onIonChange={(e) => setRole(e.detail.value)}
           placeholder="Select your role"
         >
-          <IonSelectOption value="Admin">Admin</IonSelectOption>
-          <IonSelectOption value="User">User</IonSelectOption>
+          <IonSelectOption value="ContentCreator">
+            Content Creator
+          </IonSelectOption>
+          <IonSelectOption value="Viewer">Viewer</IonSelectOption>
         </IonSelect>
 
         {error && <IonText color="danger">{error}</IonText>}

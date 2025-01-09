@@ -1,5 +1,6 @@
 import React from "react";
 import {
+  IonButton,
   IonCard,
   IonCardContent,
   IonCardHeader,
@@ -9,12 +10,16 @@ import {
   IonList,
   IonText,
 } from "@ionic/react";
+import ImageDisplay from "../components/ImageDisplay";
+import Rate from "../components/Rate";
 
 export interface RecipeData {
+  recipeId: string;
   title: string;
-  creator: string;
+  creatorId: string;
   ingredients: string[];
   instructions: string[];
+  imageId: string;
 }
 
 interface Props {
@@ -22,18 +27,17 @@ interface Props {
 }
 
 const Recipe: React.FC<Props> = ({ recipeData }) => {
+  const linkToCreator = "/profile/" + recipeData.creatorId;
+  console.log(linkToCreator);
   return (
     <IonContent fullscreen>
       <IonCard>
         <IonCardHeader>
-        <IonText className="ion-text-center">
+          <IonText className="ion-text-center">
             <IonCardTitle>{recipeData.title}</IonCardTitle>
           </IonText>
         </IonCardHeader>
         <IonCardContent>
-          <IonItem>
-            <IonText>Recipe Creator: {recipeData.creator}</IonText>
-          </IonItem>
           <IonItem>
             <IonText>
               <strong>Ingredients:</strong>
@@ -61,7 +65,14 @@ const Recipe: React.FC<Props> = ({ recipeData }) => {
             ))}
           </IonList>
         </IonCardContent>
+        {recipeData.imageId && recipeData.imageId.length > 0 && (
+          <ImageDisplay documentId={recipeData.imageId} />
+        )}
       </IonCard>
+      <IonButton expand="block" href={linkToCreator}>
+        go to creator page
+      </IonButton>
+      <Rate recipeId={recipeData.recipeId} />
     </IonContent>
   );
 };

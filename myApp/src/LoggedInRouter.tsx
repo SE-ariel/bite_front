@@ -27,7 +27,7 @@ const LoggedInRouter: React.FC = () => {
       <IonReactRouter>
         {/* Redirect to setup page if user needs to complete profile */}
         {needsSetup && <Redirect to="/setup" />}
-        
+
         <IonRouterOutlet>
           <Switch>
             {/* Public Routes */}
@@ -48,16 +48,16 @@ const LoggedInRouter: React.FC = () => {
               />
             </Route>
             <Route exact path="/create">
-              <LoggedInFrame
-                title="Create Post"
-                wrappedContent={CreatePost}
-              />
+              <LoggedInFrame title="create post" wrappedContent={CreatePost} />
             </Route>
             <Route exact path="/settings">
               <LoggedInFrame title="settings" wrappedContent={Settings} />
-            </Route>            
+            </Route>
             <Route exact path="/notifications">
-              <LoggedInFrame title="notifications" wrappedContent={Notifications} />
+              <LoggedInFrame
+                title="notifications"
+                wrappedContent={Notifications}
+              />
             </Route>
             {/* 404 Route - Always keep this last */}
             <Route path="/404">
