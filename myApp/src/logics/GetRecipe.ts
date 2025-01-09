@@ -1,10 +1,6 @@
 import { useState, useEffect } from "react";
 import { db } from "../firebaseConfig";
-import {
-  doc,
-  getDoc,
-  DocumentData,
-} from "firebase/firestore";
+import { doc, getDoc, DocumentData } from "firebase/firestore";
 
 export const data = async (uid: string) => {
   try {
@@ -45,7 +41,7 @@ export const useRecipe = (id: string) => {
     const fetchRecipeData = async () => {
       try {
         const result: DocumentData | null = await data(id || "");
-        console.log
+        console.log;
         if (result) {
           // Type assertion or mapping
           setRecipeData({
@@ -54,7 +50,8 @@ export const useRecipe = (id: string) => {
             ingredients: result.ingredients || "",
             instructions: result.instructions || "",
             title: result.title || "",
-            imageId: result.imageId || "",});
+            imageId: result.imageId || "",
+          });
         }
         setIsChecked(true);
       } catch (error) {

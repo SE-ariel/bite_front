@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react';
-import { doc, updateDoc, getDoc, FirestoreError } from 'firebase/firestore';
-import { db } from '../firebaseConfig';
+import { useState, useEffect } from "react";
+import { doc, updateDoc, getDoc, FirestoreError } from "firebase/firestore";
+import { db } from "../firebaseConfig";
 
 interface RecipeData {
   currentRate?: number;
@@ -18,9 +18,9 @@ export const useRating = (recipeId: string) => {
   useEffect(() => {
     const fetchRating = async () => {
       try {
-        const docRef = doc(db, 'recipes', recipeId);
+        const docRef = doc(db, "recipes", recipeId);
         const docSnap = await getDoc(docRef);
-        
+
         if (docSnap.exists()) {
           const data = docSnap.data() as RecipeData;
           setCurrentRating(data?.currentRate ?? 0);
@@ -46,18 +46,20 @@ export const useRating = (recipeId: string) => {
   const handleSubmit = async () => {
     if (selectedRating > 0) {
       try {
-        const docRef = doc(db, 'recipes', recipeId);
+        const docRef = doc(db, "recipes", recipeId);
         const docSnap = await getDoc(docRef);
-        
+
         if (docSnap.exists()) {
           const data = docSnap.data() as RecipeData;
           const newAmount = (data?.rateAmount ?? 0) + 1;
-          const newAverage = 
-            ((data?.currentRate ?? 0) * (data?.rateAmount ?? 0) + selectedRating) / newAmount;
+          const newAverage =
+            ((data?.currentRate ?? 0) * (data?.rateAmount ?? 0) +
+              selectedRating) /
+            newAmount;
 
           await updateDoc(docRef, {
             currentRate: newAverage,
-            rateAmount: newAmount
+            rateAmount: newAmount,
           });
 
           setCurrentRating(newAverage);
@@ -75,14 +77,14 @@ export const useRating = (recipeId: string) => {
     return false;
   };
 
-  return { 
-    currentRating, 
-    rateAmount, 
-    loading, 
-    error, 
+  return {
+    currentRating,
+    rateAmount,
+    loading,
+    error,
     selectedRating,
     isSubmitted,
     handleStarClick,
-    handleSubmit
+    handleSubmit,
   };
 };

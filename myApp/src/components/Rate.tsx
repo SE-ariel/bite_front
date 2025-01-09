@@ -32,6 +32,7 @@ const Rate: React.FC<Props> = ({ recipeId }) => {
   return (
     <IonCard>
       <IonCardContent className="ion-text-center">
+        <IonTitle size="large">Rate this recipe</IonTitle>
         {[1, 2, 3, 4, 5].map((starNumber) => (
           <IonIcon
             key={starNumber}
@@ -45,8 +46,6 @@ const Rate: React.FC<Props> = ({ recipeId }) => {
             style={{ color: "#ffc409" }}
           />
         ))}
-        </IonCardContent>
-        <IonCardContent className="ion-text-center">
         {!isSubmitted && (
           <IonButton
             expand="block"
