@@ -3,73 +3,112 @@ import { auth, db } from "../firebaseConfig";
 import {
   doc,
   getDoc,
-  setDoc,
   onSnapshot,
   collection,
-  getDocs,
-  query,
-  where,
+  addDoc,
+  updateDoc,
+  arrayUnion,
+  serverTimestamp,
 } from "firebase/firestore";
-import {
-  getAdditionalUserInfo,
-  getAuth,
-  onAuthStateChanged,
-  User,
-} from "firebase/auth";
 
-export const useRoleStatus = () => {
-  const [role, setRole] = useState("");
+export const useRecipe = (recipeId: string) => {
+  const [recipe, setRecipe] = useState<any>(null);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (user) => {
-      if (user) {
-        try {
-          const docRef = doc(db, "users", user.uid);
+    if (!recipeId) {
+      setError("Recipe ID is required");
+      return;
+    }
 
-          // Add a real-time listener instead of just a single getDoc
-          const unsubscribeDoc = onSnapshot(
-            docRef,
-            (docSnap) => {
-              if (docSnap.exists()) {
-                const currentRole = docSnap.get("Role");
-                console.log("User Role is:", currentRole);
-                setRole(currentRole);
-              } else {
-                console.log("No user document found");
-                setRole("");
-              }
-            },
-            (error) => {
-              console.error("Error listening to user document:", error);
-            }
-          );
-
-          // Return the unsubscribe function for the document listener
-          return () => unsubscribeDoc();
-        } catch (error) {
-          console.error("Error checking role status:", error);
-          setRole("");
+    const docRef = doc(db, "recipes", recipeId);
+    const unsubscribe = onSnapshot(
+      docRef,
+      (docSnap) => {
+        if (docSnap.exists()) {
+          setRecipe(docSnap.data());
+          setError(null);
+        } else {
+          setRecipe(null);
+          setError("Recipe not found");
         }
-      } else {
-        console.log("No user logged in");
-        setRole("");
+      },
+      (err) => {
+        console.error("Error fetching recipe:", err);
+        setError("Error fetching recipe");
       }
-    });
+    );
 
-    // Cleanup both subscriptions on unmount
     return () => unsubscribe();
-  }, []);
+  }, [recipeId]);
 
-  return role;
+  return { recipe, error };
 };
 
-// Optional: Function to create an admin document if needed
-export const makeRecipe = async (role: string, userKey: string) => {
+export const makeRecipe = async (recipeData: {
+  title: string;
+  instructions: string[];
+  ingredients: string[];
+}) => {
   try {
-    const userinfo = doc(db, "users", userKey);
-    await setDoc(userinfo, { Role: role }, { merge: true });
-    console.log(`Role updated to ${role}`);
+    const user = auth.currentUser; // Get the currently logged-in user
+    if (!user) {
+      throw new Error("No user is currently logged in.");
+    }
+
+    // Get the user's document
+    const userDocRef = doc(db, "users", user.uid);
+    const userSnapshot = await getDoc(userDocRef);
+
+    if (!userSnapshot.exists()) {
+      throw new Error("User document does not exist.");
+    }    
+    // Add creator's name to the recipe data
+    const completeRecipeData = {
+      ...recipeData,
+      creatorId: user.uid,
+      createdAt: serverTimestamp()
+    };
+
+
+    // Add the recipe to the "recipes" collection
+    const recipeRef = await addDoc(collection(db, "recipes"), completeRecipeData);
+
+    // Add the recipe ID to the user's "recipes" array
+    await updateDoc(userDocRef, {
+      recipes: arrayUnion(recipeRef.id), // Add the recipe ID to the array
+    });
+
+    return recipeRef.id; // Return the unique ID for further use
   } catch (error) {
-    console.error("Error creating/updating admin document: ", error);
+    console.error("Error creating recipe document: ", error);
+    throw error;
   }
+};
+
+export const handlePostUpload = async (
+    title: string,
+    ingredients: string,
+    instructions: string,
+    imageId: string,
+    setError: (error: string | null) => void,
+) => {
+    if (!title || !ingredients || !instructions) {
+        setError("Title, ingredients, and instructions are required!");
+        return;
+    }
+
+    try {
+        const recipeData = {
+            title,
+            ingredients: ingredients.split("\n"),
+            instructions: instructions.split("\n"),
+            imageId,
+        };
+        await makeRecipe(recipeData);
+        history.back();
+    } catch (error) {
+        console.error("Error uploading post:", error);
+        setError("Failed to upload post. Please try again.");
+    }
 };
