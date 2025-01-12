@@ -1,25 +1,16 @@
 import React from "react";
-import {
-  IonButton,
-  IonCard,
-  IonCardContent,
-  IonCardHeader,
-  IonCardTitle,
-  IonContent,
-  IonItem,
-  IonList,
-  IonText,
-} from "@ionic/react";
+import { IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonContent, IonItem, IonList, IonText, IonButton } from "@ionic/react";
+import { saveRecipeToUser } from "../logics/RecipeActions"; 
 import ImageDisplay from "../components/ImageDisplay";
 import Rate from "../components/Rate";
 
 export interface RecipeData {
-  recipeId: string;
+  recipeId: string; // ה-ID של המתכון
   title: string;
   creatorId: string;
   ingredients: string[];
   instructions: string[];
-  imageId: string;
+  imageId: string; // תמונה אופציונלית
 }
 
 interface Props {
@@ -27,8 +18,11 @@ interface Props {
 }
 
 const Recipe: React.FC<Props> = ({ recipeData }) => {
-  const linkToCreator = "/profile/" + recipeData.creatorId;
-  console.log(linkToCreator);
+  const handleSaveRecipe = async () => {
+    console.log("Saving recipe with ID:", recipeData.recipeId); // לוג לבדיקת ה-ID
+    await saveRecipeToUser(recipeData.recipeId); // שמירת המתכון לפי ה-ID
+  };
+
   return (
     <IonContent fullscreen>
       <IonCard>
@@ -64,13 +58,16 @@ const Recipe: React.FC<Props> = ({ recipeData }) => {
               </IonItem>
             ))}
           </IonList>
+          <IonButton expand="block" onClick={handleSaveRecipe}>
+            Save Recipe
+          </IonButton>
         </IonCardContent>
         {recipeData.imageId && recipeData.imageId.length > 0 && (
           <ImageDisplay documentId={recipeData.imageId} />
         )}
       </IonCard>
-      <IonButton expand="block" href={linkToCreator}>
-        go to creator page
+      <IonButton expand="block" href={`/creator/${recipeData.creatorId}`}>
+        Go to Creator Page
       </IonButton>
       <Rate recipeId={recipeData.recipeId} />
     </IonContent>

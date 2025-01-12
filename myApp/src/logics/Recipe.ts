@@ -10,7 +10,75 @@ import {
   arrayUnion,
   serverTimestamp,
 } from "firebase/firestore";
+import { onAuthStateChanged } from "firebase/auth";
 
+// Fetch a single recipe by ID
+export const fetchRecipe = async (recipeId: string) => {
+  if (!recipeId) throw new Error("Recipe ID is required");
+
+  try {
+    const docRef = doc(db, "recipes", recipeId);
+    const docSnap = await getDoc(docRef);
+
+    if (!docSnap.exists()) {
+      throw new Error("Recipe not found");
+    }
+
+    return docSnap.data();
+  } catch (error) {
+    console.error("Error fetching recipe:", error);
+    throw error;
+  }
+};
+
+// Create a new recipe
+export const makeRecipe = async (recipeData: {
+  title: string;
+  instructions: string[];
+  ingredients: string[];
+}) => {
+  try {
+    const user = auth.currentUser;
+    if (!user) {
+      throw new Error("No user is currently logged in.");
+    }
+
+    // Get the user's document
+    const userDocRef = doc(db, "users", user.uid);
+    const userSnapshot = await getDoc(userDocRef);
+
+    if (!userSnapshot.exists()) {
+      throw new Error("User document does not exist");
+    }
+
+    const userName = userSnapshot.data()?.SurName || "Unknown User";
+
+    // Add creator's name to the recipe data
+    const completeRecipeData = {
+      ...recipeData,
+      creator: userName,
+      createdAt: new Date().toISOString(), // Add timestamp for creation
+    };
+
+    // Add the recipe to the "recipes" collection
+    const recipeRef = await addDoc(collection(db, "recipes"), completeRecipeData);
+
+    // Update the user's document with the new recipe ID
+    await updateDoc(userDocRef, {
+      recipes: arrayUnion(recipeRef.id),
+    });
+
+    console.log(
+      `Recipe "${recipeData.title}" created successfully by ${userName}. Recipe ID: ${recipeRef.id}`
+    );
+    return recipeRef.id;// Return the unique ID for further use
+  } catch (error) {
+    console.error("Error creating recipe document:", error);
+    throw error;
+  }
+};
+
+// Optional: A hook for real-time updates for a single recipe
 export const useRecipe = (recipeId: string) => {
   const [recipe, setRecipe] = useState<any>(null);
   const [error, setError] = useState<string | null>(null);
@@ -34,7 +102,7 @@ export const useRecipe = (recipeId: string) => {
         }
       },
       (err) => {
-        console.error("Error fetching recipe:", err);
+        console.error("Error fetching recipe in real-time:", err);
         setError("Error fetching recipe");
       }
     );
@@ -44,71 +112,29 @@ export const useRecipe = (recipeId: string) => {
 
   return { recipe, error };
 };
-
-export const makeRecipe = async (recipeData: {
-  title: string;
-  instructions: string[];
-  ingredients: string[];
-}) => {
-  try {
-    const user = auth.currentUser; // Get the currently logged-in user
-    if (!user) {
-      throw new Error("No user is currently logged in.");
-    }
-
-    // Get the user's document
-    const userDocRef = doc(db, "users", user.uid);
-    const userSnapshot = await getDoc(userDocRef);
-
-    if (!userSnapshot.exists()) {
-      throw new Error("User document does not exist.");
-    }    
-    // Add creator's name to the recipe data
-    const completeRecipeData = {
-      ...recipeData,
-      creatorId: user.uid,
-      createdAt: serverTimestamp()
-    };
-
-
-    // Add the recipe to the "recipes" collection
-    const recipeRef = await addDoc(collection(db, "recipes"), completeRecipeData);
-
-    // Add the recipe ID to the user's "recipes" array
-    await updateDoc(userDocRef, {
-      recipes: arrayUnion(recipeRef.id), // Add the recipe ID to the array
-    });
-
-    return recipeRef.id; // Return the unique ID for further use
-  } catch (error) {
-    console.error("Error creating recipe document: ", error);
-    throw error;
-  }
-};
-
 export const handlePostUpload = async (
-    title: string,
-    ingredients: string,
-    instructions: string,
-    imageId: string,
-    setError: (error: string | null) => void,
+  title: string,
+  ingredients: string,
+  instructions: string,
+  imageId: string,
+  setError: (error: string | null) => void,
 ) => {
-    if (!title || !ingredients || !instructions) {
-        setError("Title, ingredients, and instructions are required!");
-        return;
-    }
+  if (!title || !ingredients || !instructions) {
+      setError("Title, ingredients, and instructions are required!");
+      return;
+  }
 
-    try {
-        const recipeData = {
-            title,
-            ingredients: ingredients.split("\n"),
-            instructions: instructions.split("\n"),
-            imageId,
-        };
-        await makeRecipe(recipeData);
-        history.back();
-    } catch (error) {
-        console.error("Error uploading post:", error);
-        setError("Failed to upload post. Please try again.");
-    }
+  try {
+      const recipeData = {
+          title,
+          ingredients: ingredients.split("\n"),
+          instructions: instructions.split("\n"),
+          imageId,
+      };
+      await makeRecipe(recipeData);
+      history.back();
+  } catch (error) {
+      console.error("Error uploading post:", error);
+      setError("Failed to upload post. Please try again.");
+  }
 };

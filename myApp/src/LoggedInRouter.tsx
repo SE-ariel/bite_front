@@ -12,6 +12,7 @@ import NotFound from "./pages/NotFound";
 import Loading from "./pages/Loading";
 import SetUpProfile from "./pages/SetupProfile";
 import useFirstTime from "./logics/FirstTime";
+import SavedRecipes from "./pages/SavedRecipes";
 import CreatePost from "./pages/CreatePost";
 import Notifications from "./pages/Notifications";
 
@@ -46,6 +47,9 @@ const LoggedInRouter: React.FC = () => {
                 title="private zone"
                 wrappedContent={PrivateZone}
               />
+            </Route>
+            <Route exact path="/saved_recipes/:id">
+              <LoggedInFrame title="Saved Recipes" wrappedContent={SavedRecipes} />
             </Route>
             <Route exact path="/create">
               <LoggedInFrame title="create post" wrappedContent={CreatePost} />
