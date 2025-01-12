@@ -12,8 +12,9 @@ import NotFound from "./pages/NotFound";
 import Loading from "./pages/Loading";
 import SetUpProfile from "./pages/SetupProfile";
 import useFirstTime from "./logics/FirstTime";
-import createRecipe from "./pages/CreateRecipe";
 import SavedRecipes from "./pages/SavedRecipes";
+import CreatePost from "./pages/CreatePost";
+import Notifications from "./pages/Notifications";
 
 const LoggedInRouter: React.FC = () => {
   const { isUserChecked, needsSetup } = useFirstTime();
@@ -27,7 +28,7 @@ const LoggedInRouter: React.FC = () => {
       <IonReactRouter>
         {/* Redirect to setup page if user needs to complete profile */}
         {needsSetup && <Redirect to="/setup" />}
-        
+
         <IonRouterOutlet>
           <Switch>
             {/* Public Routes */}
@@ -47,18 +48,20 @@ const LoggedInRouter: React.FC = () => {
                 wrappedContent={PrivateZone}
               />
             </Route>
-            <Route exact path="/createRecipe">
-              <LoggedInFrame
-                title="createRecipe"
-                wrappedContent={createRecipe}
-              />
-            </Route>
             <Route exact path="/saved_recipes/:id">
               <LoggedInFrame title="Saved Recipes" wrappedContent={SavedRecipes} />
             </Route>
-
+            <Route exact path="/create">
+              <LoggedInFrame title="create post" wrappedContent={CreatePost} />
+            </Route>
             <Route exact path="/settings">
               <LoggedInFrame title="settings" wrappedContent={Settings} />
+            </Route>
+            <Route exact path="/notifications">
+              <LoggedInFrame
+                title="notifications"
+                wrappedContent={Notifications}
+              />
             </Route>
             {/* 404 Route - Always keep this last */}
             <Route path="/404">

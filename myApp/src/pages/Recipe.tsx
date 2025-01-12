@@ -1,14 +1,16 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonContent, IonItem, IonList, IonText, IonButton } from "@ionic/react";
-import { useParams } from "react-router-dom"; // הוספת שימוש ב-react-router
-import { saveRecipeToUser, getRecipeIdByTitle } from "../logics/RecipeActions"; 
+import { saveRecipeToUser } from "../logics/RecipeActions"; 
+import ImageDisplay from "../components/ImageDisplay";
+import Rate from "../components/Rate";
 
 export interface RecipeData {
+  recipeId: string; // ה-ID של המתכון
   title: string;
-  creator: string;
+  creatorId: string;
   ingredients: string[];
   instructions: string[];
-  id: string; // ה-ID של המתכון
+  imageId?: string; // תמונה אופציונלית
 }
 
 interface Props {
@@ -16,31 +18,9 @@ interface Props {
 }
 
 const Recipe: React.FC<Props> = ({ recipeData }) => {
-  const { recipeId } = useParams<{ recipeId: string }>(); // שליפת ה-ID מה-URL
-  const [idToSave, setIdToSave] = useState<string | null>(null);
-
-  useEffect(() => {
-    console.log("Recipe ID from URL:", recipeId); // לוג לבדוק אם ה-ID נכנס כראוי מה-URL
-    if (recipeId) {
-      setIdToSave(recipeId); // אם ה-ID נמצא ב-URL, נעדכן את ה-ID לשמירה
-    } else {
-      console.log("Recipe ID not found in URL, attempting to fetch by title...");
-      // אם אין ID ב-URL, ננסה לשלוף אותו לפי כותרת
-      const fetchIdByTitle = async () => {
-        const fetchedId = await getRecipeIdByTitle(recipeData.title);
-        setIdToSave(fetchedId);
-      };
-      fetchIdByTitle();
-    }
-  }, [recipeId, recipeData.title]);
-
   const handleSaveRecipe = async () => {
-    if (idToSave) {
-      console.log("Saving recipe with ID:", idToSave); // לוג לבדיקת ה-ID
-      await saveRecipeToUser(idToSave); // שמירת המתכון לפי ה-ID
-    } else {
-      console.error("Recipe ID could not be found!"); // הודעת שגיאה אם ה-ID לא נמצא
-    }
+    console.log("Saving recipe with ID:", recipeData.recipeId); // לוג לבדיקת ה-ID
+    await saveRecipeToUser(recipeData.recipeId); // שמירת המתכון לפי ה-ID
   };
 
   return (
@@ -52,9 +32,6 @@ const Recipe: React.FC<Props> = ({ recipeData }) => {
           </IonText>
         </IonCardHeader>
         <IonCardContent>
-          <IonItem>
-            <IonText>Recipe Creator: {recipeData.creator}</IonText>
-          </IonItem>
           <IonItem>
             <IonText>
               <strong>Ingredients:</strong>
@@ -85,7 +62,14 @@ const Recipe: React.FC<Props> = ({ recipeData }) => {
             Save Recipe
           </IonButton>
         </IonCardContent>
+        {recipeData.imageId && recipeData.imageId.length > 0 && (
+          <ImageDisplay documentId={recipeData.imageId} />
+        )}
       </IonCard>
+      <IonButton expand="block" href={`/creator/${recipeData.creatorId}`}>
+        Go to Creator Page
+      </IonButton>
+      <Rate recipeId={recipeData.recipeId} />
     </IonContent>
   );
 };

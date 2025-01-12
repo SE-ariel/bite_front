@@ -3,12 +3,12 @@ import { auth, db } from "../firebaseConfig";
 import {
   doc,
   getDoc,
-  setDoc,
   onSnapshot,
   collection,
   addDoc,
   updateDoc,
   arrayUnion,
+  serverTimestamp,
 } from "firebase/firestore";
 import { onAuthStateChanged } from "firebase/auth";
 
@@ -92,7 +92,6 @@ export const useRecipe = (recipeId: string) => {
     }
 
     const docRef = doc(db, "recipes", recipeId);
-
     const unsubscribe = onSnapshot(
       docRef,
       (docSnap) => {
