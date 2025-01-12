@@ -10,7 +10,7 @@ export interface RecipeData {
   creatorId: string;
   ingredients: string[];
   instructions: string[];
-  imageId?: string; // תמונה אופציונלית
+  imageId: string; // תמונה אופציונלית
 }
 
 interface Props {
