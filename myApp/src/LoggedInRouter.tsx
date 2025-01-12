@@ -12,6 +12,8 @@ import NotFound from "./pages/NotFound";
 import Loading from "./pages/Loading";
 import SetUpProfile from "./pages/SetupProfile";
 import useFirstTime from "./logics/FirstTime";
+import createRecipe from "./pages/CreateRecipe";
+import SavedRecipes from "./pages/SavedRecipes";
 
 const LoggedInRouter: React.FC = () => {
   const { isUserChecked, needsSetup } = useFirstTime();
@@ -45,6 +47,16 @@ const LoggedInRouter: React.FC = () => {
                 wrappedContent={PrivateZone}
               />
             </Route>
+            <Route exact path="/createRecipe">
+              <LoggedInFrame
+                title="createRecipe"
+                wrappedContent={createRecipe}
+              />
+            </Route>
+            <Route exact path="/saved_recipes/:id">
+              <LoggedInFrame title="Saved Recipes" wrappedContent={SavedRecipes} />
+            </Route>
+
             <Route exact path="/settings">
               <LoggedInFrame title="settings" wrappedContent={Settings} />
             </Route>
