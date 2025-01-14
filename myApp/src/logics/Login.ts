@@ -4,7 +4,6 @@ import {
   GoogleAuthProvider,
   FacebookAuthProvider,
   signInWithPopup,
-  fetchSignInMethodsForEmail,
   AuthProvider,
 } from "firebase/auth";
 import { useHistory } from "react-router-dom";
@@ -13,7 +12,6 @@ import { auth } from "../firebaseConfig";
 export const useLogin = () => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
-  const [provider, setProvider] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const history = useHistory();
 
@@ -72,20 +70,11 @@ export const useLogin = () => {
     setError(null);
 
     try {
+      // Sign in with the selected provider
       const result = await signInWithPopup(auth, authProvider);
-      const socialEmail = result.user.email;
 
-      if (socialEmail) {
-        const methods = await fetchSignInMethodsForEmail(auth, socialEmail);
-
-        if (methods.includes("password")) {
-          setError(
-            "This email is already registered with email/password. Please log in using that method."
-          );
-          return;
-        }
-      }
-
+      // Redirect to /home after successful social login
+      console.log("Social login successful!");
       history.push("/home");
     } catch (err: any) {
       handleAuthError(err);
@@ -107,6 +96,7 @@ export const useLogin = () => {
         return;
     }
 
+    // Perform social login
     handleSocialLogin(authProvider);
   };
 

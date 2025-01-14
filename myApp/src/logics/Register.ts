@@ -3,7 +3,13 @@ import { setDoc, doc } from "firebase/firestore";
 import { db, auth as firebaseAuth } from "../firebaseConfig";
 import { useHistory } from "react-router";
 import { createUserWithEmailAndPassword } from "firebase/auth";
-
+import {
+  GoogleAuthProvider,
+  FacebookAuthProvider,
+  signInWithPopup,
+  AuthProvider,
+} from "firebase/auth";
+import { auth } from "../firebaseConfig";
 export const useRegister = () => {
   const [firstName, setFirstName] = useState<string>("");
   const [surName, setSurName] = useState<string>("");
@@ -12,7 +18,23 @@ export const useRegister = () => {
   const [password, setPassword] = useState<string>("");
   const [error, setError] = useState<string | null>(null);
   const history = useHistory();
-
+  const handleAuthError = (err: any) => {
+    switch (err.code) {
+      case "auth/user-not-found":
+        setError("No user found with this email.");
+        break;
+      case "auth/wrong-password":
+        setError("Incorrect password.");
+        break;
+      case "auth/account-exists-with-different-credential":
+        setError(
+          "This email is already registered with a different sign-in method. Please use that method."
+        );
+        break;
+      default:
+        setError(err.message || "An unexpected error occurred.");
+    }
+  };
   const validateInputs = (): boolean => {
     setError(null); // Reset error state before validation
     if (!firstName.trim()) {
@@ -100,7 +122,40 @@ export const useRegister = () => {
       setError(err.message || "Failed to save details. Please try again.");
     }
   };
-
+  const handleSocialLogin = async (authProvider: AuthProvider) => {
+    setError(null);
+  
+    try {
+      // Sign in with the selected provider
+      const result = await signInWithPopup(auth, authProvider);
+  
+      // Redirect to /home after successful social login
+      console.log("Social login successful!");
+      history.push("/home");
+    } catch (err: any) {
+      handleAuthError(err);
+    }
+  };
+  
+  const triggerSocialLogin = (providerType: string) => {
+    let authProvider: AuthProvider;
+  
+    switch (providerType) {
+      case "Google":
+        authProvider = new GoogleAuthProvider();
+        break;
+      case "Facebook":
+        authProvider = new FacebookAuthProvider();
+        break;
+      default:
+        setError("Unsupported authentication provider.");
+        return;
+    }
+  
+    // Perform social login
+    handleSocialLogin(authProvider);
+  };
+  
   return {
     firstName,
     setFirstName,
@@ -114,6 +169,7 @@ export const useRegister = () => {
     setPassword,
     error,
     handleRegister,
+    triggerSocialLogin,
     handleSubmit,
   };
 };
