@@ -1,4 +1,4 @@
-import { useLogin } from "../logics/LoginLogout";
+import { useLogin } from "../logics/Login";
 import { logoGoogle, logoFacebook } from "ionicons/icons";
 import "./Login.css";
 import {
@@ -16,7 +16,7 @@ const Login: React.FC = () => {
     setEmail,
     password,
     setPassword,
-    setProvider,
+    triggerSocialLogin,
     error,
     handleLogin,
   } = useLogin();
@@ -54,20 +54,14 @@ const Login: React.FC = () => {
             <IonButton
               size="large"
               className="social-button google-button"
-              onClick={() => {
-                setProvider("Google");
-                handleLogin();
-              }}
+              onClick={() => triggerSocialLogin("Google")}
             >
               <IonIcon size="large" slot="icon-only" icon={logoGoogle} />
             </IonButton>
             <IonButton
               size="large"
               className="social-button facebook-button"
-              onClick={() => {
-                setProvider("Facebook");
-                handleLogin();
-              }}
+              onClick={() => triggerSocialLogin("Facebook")}
             >
               <IonIcon size="large" slot="icon-only" icon={logoFacebook} />
             </IonButton>
