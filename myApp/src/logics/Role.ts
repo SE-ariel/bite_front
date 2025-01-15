@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { auth, db } from "../firebaseConfig";
 import { doc, setDoc, onSnapshot } from "firebase/firestore";
 import { onAuthStateChanged } from "firebase/auth";
+import { getUserIdByEmail } from "./Profile";
 
 export const useRoleStatus = () => {
   const [role, setRole] = useState("");
@@ -50,11 +51,16 @@ export const useRoleStatus = () => {
 };
 
 // Optional: Function to create an admin document if needed
-export const makeUserRole = async (role: string, userKey: string) => {
+export const makeUserRole = async (role: string, email: string) => {
   try {
-    const userinfo = doc(db, "users", userKey);
-    await setDoc(userinfo, { role: role }, { merge: true });
-    console.log(`Role updated to ${role}`);
+    const userKey = await getUserIdByEmail(email);
+    if (userKey) {
+      const userinfo = doc(db, "users", userKey);
+      await setDoc(userinfo, { role: role }, { merge: true });
+      console.log(`Role updated to ${role}`);
+    } else {
+      console.error("Error: userKey is null");
+    }
   } catch (error) {
     console.error("Error creating/updating admin document: ", error);
   }

@@ -64,10 +64,10 @@ const Recipe: React.FC<Props> = ({ recipeData }) => {
               </IonItem>
             ))}
           </IonList>
-        </IonCardContent>
-        {recipeData.imageId && recipeData.imageId.length > 0 && (
+          {recipeData.imageId && recipeData.imageId.length > 0 && (
           <ImageDisplay documentId={recipeData.imageId} />
         )}
+        </IonCardContent>
       </IonCard>
       <IonButton expand="block" href={linkToCreator}>
         go to creator page
