@@ -127,7 +127,7 @@ export const useRegister = () => {
   
     try {
       // Sign in with the selected provider
-      const result = await signInWithPopup(auth, authProvider);
+      await signInWithPopup(auth, authProvider);
   
       // Redirect to /home after successful social login
       console.log("Social login successful!");
