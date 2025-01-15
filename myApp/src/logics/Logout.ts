@@ -1,7 +1,6 @@
 import { signOut } from "firebase/auth";
 import { auth } from "../firebaseConfig";
 import { useHistory } from "react-router-dom";
-import { useAuth } from "./Auth";
 
 export const useLogout = () => {
   const history = useHistory();
@@ -17,6 +16,3 @@ export const useLogout = () => {
 
   return { handleLogout };
 };
-
-// Convenience functions for login and register
-export const useLogin = () => useAuth();
