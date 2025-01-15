@@ -32,3 +32,4 @@ yarn-error.log*
 
 /src/firebaseConfig.tsx
 /functions
+/android

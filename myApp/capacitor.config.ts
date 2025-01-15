@@ -10,6 +10,21 @@ const config: CapacitorConfig = {
         allowImageCapture: true
       }
     }
+  },
+  server: {
+    androidScheme: 'https',
+    allowNavigation: [
+      'accounts.google.com',
+      'www.facebook.com',
+      'auth.firebase.com',
+      'google.com'
+    ]
+  },
+  ios: {
+    scheme: 'myapp'
+  },
+  android: {
+    //scheme: 'myapp'
   }
 };
 
