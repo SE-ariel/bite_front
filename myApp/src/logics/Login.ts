@@ -83,14 +83,14 @@ export const useLogin = () => {
         });
         if (result?.user) {
           console.log("Google sign in successful:", result.user);
-
+  
           // Manually update Firebase Auth state
           if (!result.credential?.idToken) {
             throw new Error("No ID token returned from Google sign in");
           }
           const credential = GoogleAuthProvider.credential(result.credential.idToken);
           await signInWithCredential(auth, credential);
-
+  
           console.log("user:", auth.currentUser);
           // Only navigate after successful authentication
           history.push("/home");
@@ -111,10 +111,10 @@ export const useLogin = () => {
           console.log("Facebook sign in successful:", result.user);
   
           // Manually update Firebase Auth state
-          if (!result.credential?.idToken) {
-            throw new Error("No ID token returned from Facebook sign in");
+          if (!result.credential?.accessToken) {
+            throw new Error("No access token returned from Facebook sign in");
           }
-          const credential = FacebookAuthProvider.credential(result.credential.idToken);
+          const credential = FacebookAuthProvider.credential(result.credential.accessToken);
           await signInWithCredential(auth, credential);
   
           console.log("Firebase Auth user:", auth.currentUser);
