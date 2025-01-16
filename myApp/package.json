@@ -12,6 +12,7 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@capacitor-firebase/authentication": "^6.3.1",
     "@capacitor/android": "6.2.0",
     "@capacitor/app": "^6.0.2",
     "@capacitor/browser": "^6.0.4",
@@ -32,6 +33,7 @@
     "ionicons": "^7.0.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-native-fbsdk": "^3.0.0",
     "react-router": "^5.3.4",
     "react-router-dom": "^5.3.4"
   },
@@ -43,6 +45,7 @@
     "@testing-library/user-event": "^14.4.3",
     "@types/react": "^18.0.27",
     "@types/react-dom": "^18.0.10",
+    "@types/react-native-fbsdk": "^3.0.6",
     "@vitejs/plugin-legacy": "^5.0.0",
     "@vitejs/plugin-react": "^4.0.1",
     "cypress": "^13.5.0",

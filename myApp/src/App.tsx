@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { IonApp, setupIonicReact } from "@ionic/react";
 
 /* Core CSS required for Ionic components to work properly */
@@ -35,10 +35,31 @@ import Loading from "./pages/Loading";
 import LoggedInRouter from "./LoggedInRouter";
 import LoggedOutRouter from "./LoggedOutRouter";
 import { useNotifications } from './logics/Notifications';
+import { FirebaseAuthentication } from '@capacitor-firebase/authentication';
 
 setupIonicReact();
 
 const App: React.FC = () => {
+  useEffect(() => {
+    const initAuth = async () => {
+      // Initialize Firebase Authentication
+      const unsubscribe = await FirebaseAuthentication.addListener('authStateChange',
+        async (change) => {
+          console.log('Auth state changed:', change);
+          if (change.user) {
+            // User is signed in
+            console.log('User authenticated:', change.user);
+          }
+        });
+
+      return () => {
+        unsubscribe.remove();
+      };
+    };
+
+    initAuth();
+  }, []);
+
   const { isLoggedIn, isLoading } = useLoggedIn();
 
   useNotifications();

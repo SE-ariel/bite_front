@@ -9,22 +9,22 @@ const config: CapacitorConfig = {
       web: {
         allowImageCapture: true
       }
+    },
+    FirebaseAuthentication: {
+      skipNativeAuth: false,
+      providers: ['google.com', 'facebook.com']
     }
   },
   server: {
     androidScheme: 'https',
     allowNavigation: [
       'accounts.google.com',
+      '*.google.com',
+      'www.googleapis.com',
+      'oauth2.googleapis.com',
       'www.facebook.com',
-      'auth.firebase.com',
-      'google.com'
+      '*.facebook.com'
     ]
-  },
-  ios: {
-    scheme: 'myapp'
-  },
-  android: {
-    //scheme: 'myapp'
   }
 };
 

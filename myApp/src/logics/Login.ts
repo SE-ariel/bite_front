@@ -5,9 +5,11 @@ import {
   FacebookAuthProvider,
   signInWithPopup,
   AuthProvider,
+  signInWithCredential,
 } from "firebase/auth";
 import { useHistory } from "react-router-dom";
 import { auth } from "../firebaseConfig";
+import { FirebaseAuthentication } from "@capacitor-firebase/authentication";
 
 export const useLogin = () => {
   const [email, setEmail] = useState<string>("");
@@ -66,38 +68,73 @@ export const useLogin = () => {
     }
   };
 
-  const handleSocialLogin = async (authProvider: AuthProvider) => {
+  const handleSocialLogin = async (providerType: string) => {
     setError(null);
-
     try {
-      // Sign in with the selected provider
-      const result = await signInWithPopup(auth, authProvider);
+      // First sign out if there's an existing session
+      const currentUser = await FirebaseAuthentication.getCurrentUser();
+      if (currentUser?.user) {
+        await FirebaseAuthentication.signOut();
+      }
+      if (providerType === "Google") {
+        // Perform Google sign in
+        const result = await FirebaseAuthentication.signInWithGoogle({
+          skipNativeAuth: false,
+        });
+        if (result?.user) {
+          console.log("Google sign in successful:", result.user);
 
-      // Redirect to /home after successful social login
-      console.log("Social login successful!");
-      history.push("/home");
-    } catch (err: any) {
-      handleAuthError(err);
+          // Manually update Firebase Auth state
+          if (!result.credential?.idToken) {
+            throw new Error("No ID token returned from Google sign in");
+          }
+          const credential = GoogleAuthProvider.credential(result.credential.idToken);
+          await signInWithCredential(auth, credential);
+
+          console.log("user:", auth.currentUser);
+          // Only navigate after successful authentication
+          history.push("/home");
+          history.go(0);
+        } else {
+          throw new Error("No user data returned from Google sign in");
+        }
+      }
+      if (providerType === "Facebook") {
+        console.log("Attempting Facebook sign in");
+        // Perform Facebook sign in
+        const result = await FirebaseAuthentication.signInWithFacebook({
+          skipNativeAuth: false,
+        });
+        console.log("Facebook sign in result:", result);
+  
+        if (result?.user) {
+          console.log("Facebook sign in successful:", result.user);
+  
+          // Manually update Firebase Auth state
+          if (!result.credential?.idToken) {
+            throw new Error("No ID token returned from Facebook sign in");
+          }
+          const credential = FacebookAuthProvider.credential(result.credential.idToken);
+          await signInWithCredential(auth, credential);
+  
+          console.log("Firebase Auth user:", auth.currentUser);
+          // Only navigate after successful authentication
+          history.push("/home");
+          history.go(0);
+        } else {
+          throw new Error("No user data returned from Facebook sign in");
+        }
+      }
+    } catch (error) {
+      console.error("Social login error:", error);
+      setError(
+        error instanceof Error ? error.message : "Authentication failed"
+      );
     }
   };
 
   const triggerSocialLogin = (providerType: string) => {
-    let authProvider: AuthProvider;
-
-    switch (providerType) {
-      case "Google":
-        authProvider = new GoogleAuthProvider();
-        break;
-      case "Facebook":
-        authProvider = new FacebookAuthProvider();
-        break;
-      default:
-        setError("Unsupported authentication provider.");
-        return;
-    }
-
-    // Perform social login
-    handleSocialLogin(authProvider);
+    handleSocialLogin(providerType);
   };
 
   return {
