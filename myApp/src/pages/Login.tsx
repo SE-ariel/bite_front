@@ -26,7 +26,7 @@ const Login: React.FC = () => {
       <IonContent className="ion-padding">
         {/* Header */}
         <div className="header-icon">
-          <img src="/public/favicon2.png" alt="App Logo" />
+          <img src="/favicon2.png" alt="App Logo" />
         </div>
         <div className="main-container">
           <IonInput

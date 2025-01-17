@@ -54,7 +54,7 @@ export const useNotifications = () => {
         {
           title,
           body,
-          id: new Date().getTime(),
+          id: new Date().getTime() % 2147483647,
           schedule: { at: new Date(Date.now() + 1000) },
           sound: undefined,
           attachments: undefined,

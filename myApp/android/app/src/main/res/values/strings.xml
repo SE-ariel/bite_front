@@ -1,0 +1,10 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">myApp</string>
+    <string name="title_activity_main">myApp</string>
+    <string name="package_name">io.ionic.starter</string>
+    <string name="custom_url_scheme">io.ionic.starter</string>
+    <string name="facebook_app_id">1121086612968423</string>
+    <string name="facebook_client_token">598aa7be81b2cd014931d29bdcd6c62e</string>
+    <string name="fb_login_protocol_scheme">fb1121086612968423</string>
+</resources>
