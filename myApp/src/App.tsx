@@ -34,33 +34,11 @@ import { useLoggedIn } from "./logics/IsLoggedIn";
 import Loading from "./pages/Loading";
 import LoggedInRouter from "./LoggedInRouter";
 import LoggedOutRouter from "./LoggedOutRouter";
-import { FirebaseAuthentication } from '@capacitor-firebase/authentication';
 
 setupIonicReact();
 
 const App: React.FC = () => {
-  useEffect(() => {
-    const initAuth = async () => {
-      // Initialize Firebase Authentication
-      const unsubscribe = await FirebaseAuthentication.addListener('authStateChange',
-        async (change) => {
-          console.log('Auth state changed:', change);
-          if (change.user) {
-            // User is signed in
-            console.log('User authenticated:', change.user);
-          }
-        });
-
-      return () => {
-        unsubscribe.remove();
-      };
-    };
-
-    initAuth();
-  }, []);
-
   const { isLoggedIn, isLoading } = useLoggedIn();
-
 
   if (isLoading) {
     return (
