@@ -14,14 +14,15 @@ import SetUpProfile from "./pages/SetupProfile";
 import useFirstTime from "./logics/FirstTime";
 import CreatePost from "./pages/CreatePost";
 import Notifications from "./pages/Notifications";
+import { useNotifications } from "./logics/Notifications";
 
 const LoggedInRouter: React.FC = () => {
+  useNotifications();
   const { isUserChecked, needsSetup } = useFirstTime();
 
   if (!isUserChecked) {
     return <Loading />;
   }
-
   return (
     <IonApp>
       <IonReactRouter>

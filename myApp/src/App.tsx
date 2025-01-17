@@ -34,7 +34,6 @@ import { useLoggedIn } from "./logics/IsLoggedIn";
 import Loading from "./pages/Loading";
 import LoggedInRouter from "./LoggedInRouter";
 import LoggedOutRouter from "./LoggedOutRouter";
-import { useNotifications } from './logics/Notifications';
 import { FirebaseAuthentication } from '@capacitor-firebase/authentication';
 
 setupIonicReact();
@@ -62,7 +61,6 @@ const App: React.FC = () => {
 
   const { isLoggedIn, isLoading } = useLoggedIn();
 
-  useNotifications();
 
   if (isLoading) {
     return (
