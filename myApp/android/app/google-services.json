@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "971385690514",
+    "firebase_url": "https://bite00-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "bite00",
+    "storage_bucket": "bite00.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:971385690514:android:3279c0a780314ac536094b",
+        "android_client_info": {
+          "package_name": "io.ionic.starter"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "971385690514-f09ag9o2tnucfmi61on5q03d77hv3ol7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBMXs4rP6kREu_yMAQ_kO-Q3CfKbRmW6fk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "971385690514-f09ag9o2tnucfmi61on5q03d77hv3ol7.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -15,15 +15,16 @@ import useFirstTime from "./logics/FirstTime";
 import SavedRecipes from "./pages/SavedRecipes";
 import CreatePost from "./pages/CreatePost";
 import Notifications from "./pages/Notifications";
+import { useNotifications } from "./logics/Notifications";
 import CreatedRecipes from "./pages/CreatedRecipes";
 
 const LoggedInRouter: React.FC = () => {
+  useNotifications();
   const { isUserChecked, needsSetup } = useFirstTime();
 
   if (!isUserChecked) {
     return <Loading />;
   }
-
   return (
     <IonApp>
       <IonReactRouter>

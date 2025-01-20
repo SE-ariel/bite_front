@@ -2,7 +2,6 @@ import React from "react";
 import { IonButton } from "@ionic/react";
 import { useFollowState } from "../logics/Follow";
 import { auth } from "../firebaseConfig";
-import { c } from "vitest/dist/reporters-5f784f42";
 
 interface Props {
   otherUserID: string;
