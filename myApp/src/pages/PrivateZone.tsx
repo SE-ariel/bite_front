@@ -26,6 +26,17 @@ const PrivateZone: React.FC = () => {
           )}
         </IonCardContent>
       </IonCard>
+      <IonCard>
+        <IonCardContent>
+          {/* אם יש משתמש מחובר, הוסף את ה-ID שלו ל-URL */}
+          {userId && (role == "Admin" || role == "ContentCreator") && (
+            // השתמש ב-<Link> ישירות על IonButton
+            <Link to={`/created_recipes/${userId}`}>
+              <IonButton>Created Recipes</IonButton>
+            </Link>
+          )}
+        </IonCardContent>
+      </IonCard>
     </IonContent>
   );
 };
