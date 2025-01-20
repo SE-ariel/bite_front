@@ -1,6 +1,6 @@
 import React from "react";
 import { IonButton, IonCard, IonCardContent } from "@ionic/react";
-import { useLogout } from "../logics/LoginLogout";
+import { useLogout } from "../logics/Logout";
 
 const LogOutCard: React.FC = () => {
   const { handleLogout } = useLogout();

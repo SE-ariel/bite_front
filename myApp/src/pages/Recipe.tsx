@@ -1,6 +1,6 @@
 import React from "react";
 import { IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonContent, IonItem, IonList, IonText, IonButton } from "@ionic/react";
-import { saveRecipeToUser } from "../logics/RecipeActions"; 
+import { saveRecipeToUser } from "../logics/SavedRecipes"; 
 import ImageDisplay from "../components/ImageDisplay";
 import Rate from "../components/Rate";
 
@@ -18,6 +18,7 @@ interface Props {
 }
 
 const Recipe: React.FC<Props> = ({ recipeData }) => {
+  const linkToCreator = "/profile/" + recipeData.creatorId;
   const handleSaveRecipe = async () => {
     console.log("Saving recipe with ID:", recipeData.recipeId); // לוג לבדיקת ה-ID
     await saveRecipeToUser(recipeData.recipeId); // שמירת המתכון לפי ה-ID
@@ -61,13 +62,13 @@ const Recipe: React.FC<Props> = ({ recipeData }) => {
           <IonButton expand="block" onClick={handleSaveRecipe}>
             Save Recipe
           </IonButton>
-        </IonCardContent>
         {recipeData.imageId && recipeData.imageId.length > 0 && (
           <ImageDisplay documentId={recipeData.imageId} />
         )}
+        </IonCardContent>
       </IonCard>
-      <IonButton expand="block" href={`/creator/${recipeData.creatorId}`}>
-        Go to Creator Page
+      <IonButton expand="block" href={linkToCreator}>
+        go to creator page
       </IonButton>
       <Rate recipeId={recipeData.recipeId} />
     </IonContent>

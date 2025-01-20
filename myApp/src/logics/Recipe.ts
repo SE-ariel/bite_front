@@ -11,25 +11,41 @@ import {
   serverTimestamp,
 } from "firebase/firestore";
 import { onAuthStateChanged } from "firebase/auth";
+export const useRecipe = (recipeId: string) => {
+  const [recipe, setRecipe] = useState<any>(null);
+  const [error, setError] = useState<string | null>(null);
 
-// Fetch a single recipe by ID
-export const fetchRecipe = async (recipeId: string) => {
-  if (!recipeId) throw new Error("Recipe ID is required");
-
-  try {
-    const docRef = doc(db, "recipes", recipeId);
-    const docSnap = await getDoc(docRef);
-
-    if (!docSnap.exists()) {
-      throw new Error("Recipe not found");
+  useEffect(() => {
+    if (!recipeId) {
+      setError("Recipe ID is required");
+      return;
     }
 
-    return docSnap.data();
-  } catch (error) {
-    console.error("Error fetching recipe:", error);
-    throw error;
-  }
+    const docRef = doc(db, "recipes", recipeId);
+    const unsubscribe = onSnapshot(
+      docRef,
+      (docSnap) => {
+        if (docSnap.exists()) {
+          setRecipe(docSnap.data());
+          setError(null);
+        } else {
+          setRecipe(null);
+          setError("Recipe not found");
+        }
+      },
+      (err) => {
+        console.error("Error fetching recipe in real-time:", err);
+        setError("Error fetching recipe");
+      }
+    );
+
+    return () => unsubscribe();
+  }, [recipeId]);
+
+  return { recipe, error };
 };
+
+
 
 // Create a new recipe
 export const makeRecipe = async (recipeData: {
@@ -78,40 +94,6 @@ export const makeRecipe = async (recipeData: {
   }
 };
 
-// Optional: A hook for real-time updates for a single recipe
-export const useRecipe = (recipeId: string) => {
-  const [recipe, setRecipe] = useState<any>(null);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    if (!recipeId) {
-      setError("Recipe ID is required");
-      return;
-    }
-
-    const docRef = doc(db, "recipes", recipeId);
-    const unsubscribe = onSnapshot(
-      docRef,
-      (docSnap) => {
-        if (docSnap.exists()) {
-          setRecipe(docSnap.data());
-          setError(null);
-        } else {
-          setRecipe(null);
-          setError("Recipe not found");
-        }
-      },
-      (err) => {
-        console.error("Error fetching recipe in real-time:", err);
-        setError("Error fetching recipe");
-      }
-    );
-
-    return () => unsubscribe();
-  }, [recipeId]);
-
-  return { recipe, error };
-};
 export const handlePostUpload = async (
   title: string,
   ingredients: string,
@@ -136,5 +118,24 @@ export const handlePostUpload = async (
   } catch (error) {
       console.error("Error uploading post:", error);
       setError("Failed to upload post. Please try again.");
+  }
+};
+
+// Fetch a single recipe by ID
+export const fetchRecipe = async (recipeId: string) => {
+  if (!recipeId) throw new Error("Recipe ID is required");
+
+  try {
+    const docRef = doc(db, "recipes", recipeId);
+    const docSnap = await getDoc(docRef);
+
+    if (!docSnap.exists()) {
+      throw new Error("Recipe not found");
+    }
+
+    return docSnap.data();
+  } catch (error) {
+    console.error("Error fetching recipe:", error);
+    throw error;
   }
 };

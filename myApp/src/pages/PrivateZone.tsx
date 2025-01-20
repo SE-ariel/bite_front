@@ -26,14 +26,6 @@ const PrivateZone: React.FC = () => {
           )}
         </IonCardContent>
       </IonCard>
-
-      {role === "Admin" && (
-        <IonCard>
-          <IonCardContent>
-            <IonButton href="createRecipe">Create Recipe</IonButton>
-          </IonCardContent>
-        </IonCard>
-      )}
     </IonContent>
   );
 };

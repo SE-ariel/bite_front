@@ -30,7 +30,7 @@ import "@ionic/react/css/palettes/dark.system.css";
 
 /* Theme variables */
 import "./theme/variables.css";
-import { useLoggedIn } from "./logics/Auth";
+import { useLoggedIn } from "./logics/IsLoggedIn";
 import Loading from "./pages/Loading";
 import LoggedInRouter from "./LoggedInRouter";
 import LoggedOutRouter from "./LoggedOutRouter";
