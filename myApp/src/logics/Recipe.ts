@@ -67,13 +67,13 @@ export const makeRecipe = async (recipeData: {
       throw new Error("User document does not exist");
     }
 
-    const userName = userSnapshot.data()?.SurName || "Unknown User";
+
 
     // Add creator's name to the recipe data
     const completeRecipeData = {
       ...recipeData,
-      creator: userName,
-      createdAt: new Date().toISOString(), // Add timestamp for creation
+      creatorId: user.uid,
+      createdAt: serverTimestamp()
     };
 
     // Add the recipe to the "recipes" collection
@@ -84,9 +84,7 @@ export const makeRecipe = async (recipeData: {
       recipes: arrayUnion(recipeRef.id),
     });
 
-    console.log(
-      `Recipe "${recipeData.title}" created successfully by ${userName}. Recipe ID: ${recipeRef.id}`
-    );
+
     return recipeRef.id;// Return the unique ID for further use
   } catch (error) {
     console.error("Error creating recipe document:", error);
@@ -102,22 +100,22 @@ export const handlePostUpload = async (
   setError: (error: string | null) => void,
 ) => {
   if (!title || !ingredients || !instructions) {
-      setError("Title, ingredients, and instructions are required!");
-      return;
+    setError("Title, ingredients, and instructions are required!");
+    return;
   }
 
   try {
-      const recipeData = {
-          title,
-          ingredients: ingredients.split("\n"),
-          instructions: instructions.split("\n"),
-          imageId,
-      };
-      await makeRecipe(recipeData);
-      history.back();
+    const recipeData = {
+      title,
+      ingredients: ingredients.split("\n"),
+      instructions: instructions.split("\n"),
+      imageId,
+    };
+    await makeRecipe(recipeData);
+    history.back();
   } catch (error) {
-      console.error("Error uploading post:", error);
-      setError("Failed to upload post. Please try again.");
+    console.error("Error uploading post:", error);
+    setError("Failed to upload post. Please try again.");
   }
 };
 
