@@ -1,5 +1,6 @@
 import React from "react";
 import {
+  IonButton,
   IonCard,
   IonCardContent,
   IonCardHeader,
@@ -11,6 +12,7 @@ import {
 import "./Home.css";
 import { UserData } from "../logics/Profile";
 import FollowButton from "../components/FollowButton";
+import { Link } from "react-router-dom";
 
 interface Props {
   userData: UserData;
@@ -36,8 +38,21 @@ const Profile: React.FC<Props> = (props) => {
           </IonItem>
         </IonCardContent>
       </IonCard>
-      <FollowButton otherUserID={props.userID} />
+      <IonCard>
+        <IonCardContent>
+          <FollowButton otherUserID={props.userID} />
+        </IonCardContent>
+      </IonCard>
+      <IonCard>
+        <IonCardContent>
+          <Link to={`/created_recipes/${props.userID}`}>
+            <IonButton>Created Recipes</IonButton>
+          </Link>
+        </IonCardContent>
+      </IonCard>
     </IonContent>
+
+
   );
 };
 

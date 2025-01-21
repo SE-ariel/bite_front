@@ -11,6 +11,7 @@ import {
   getDoc,
   setDoc,
   Unsubscribe,
+  Timestamp,
 } from "firebase/firestore";
 import { db, auth } from "../firebaseConfig";
 import { useEffect, useRef } from "react";
@@ -54,7 +55,7 @@ export const useNotifications = () => {
         {
           title,
           body,
-          id: new Date().getTime(),
+          id: new Date().getTime() % 2147483647,
           schedule: { at: new Date(Date.now() + 1000) },
           sound: undefined,
           attachments: undefined,
@@ -98,16 +99,26 @@ export const useNotifications = () => {
               const creatorData = creatorDoc.data();
               
               if (creatorData) {
+
+                const documentId = uid + change.doc.id;
+                try{
+                  const notificationExist = await getDoc(doc(db, "notifications", documentId));
+                  if (notificationExist.data() && notificationExist?.data()?.type) return;
+
+                }finally{
+                  console.log("Notification does not exist");
+                }
+
                 const creatorName = `${creatorData.firstName} ${creatorData.surName}`;
-                
-                if (Capacitor.isNativePlatform()) {
+                const yesterday = new Date();
+                yesterday.setDate(yesterday.getDate() - 1);
+                if (Capacitor.isNativePlatform() && recipe.createdAt >  Timestamp.fromDate(yesterday)) {
                   sendNotification(
                     "New Recipe",
                     `${creatorName} posted: ${recipe.title}`
                   );
                 }
 
-                const documentId = uid + change.doc.id;
                 const documentData = {
                   userId: uid,
                   title: "New Recipe",
