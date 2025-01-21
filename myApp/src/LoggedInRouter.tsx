@@ -15,6 +15,7 @@ import useFirstTime from "./logics/FirstTime";
 import SavedRecipes from "./pages/SavedRecipes";
 import CreatePost from "./pages/CreatePost";
 import Notifications from "./pages/Notifications";
+import EditPost from "./pages/EditPost";
 import { useNotifications } from "./logics/Notifications";
 import CreatedRecipes from "./pages/CreatedRecipes";
 
@@ -79,6 +80,10 @@ const LoggedInRouter: React.FC = () => {
             {/* Dynamic Profile Route */}
             <Route path="/recipe/:id?">
               <LoggedInFrame title="profile" wrappedContent={Loading} />
+            </Route>
+            {/* Dynamic Edit Route */}
+            <Route path="/edit/:id?">
+              <LoggedInFrame title="edit" wrappedContent={EditPost} />
             </Route>
             {/* 404 Route - Always keep this last */}
             <Route path="*">

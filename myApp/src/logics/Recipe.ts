@@ -93,11 +93,12 @@ export const makeRecipe = async (recipeData: {
 };
 
 export const handlePostUpload = async (
-  title: string,
-  ingredients: string,
-  instructions: string,
-  imageId: string,
-  setError: (error: string | null) => void,
+    title: string,
+    ingredients: string,
+    instructions: string,
+    imageId: string,
+    setError: (error: string | null) => void,
+    postId?: string // Optional postId for updating an existing post
 ) => {
   if (!title || !ingredients || !instructions) {
     setError("Title, ingredients, and instructions are required!");
@@ -111,7 +112,16 @@ export const handlePostUpload = async (
       instructions: instructions.split("\n"),
       imageId,
     };
-    await makeRecipe(recipeData);
+
+    if (postId) {
+      // Update existing post
+      const postRef = doc(db, "recipes", postId);
+      await updateDoc(postRef, recipeData);
+      console.log(`Recipe "${title}" updated successfully!`);
+  } else {
+      // Create a new post
+      await makeRecipe(recipeData);
+  }
     history.back();
   } catch (error) {
     console.error("Error uploading post:", error);
@@ -137,3 +147,5 @@ export const fetchRecipe = async (recipeId: string) => {
     throw error;
   }
 };
+
+
