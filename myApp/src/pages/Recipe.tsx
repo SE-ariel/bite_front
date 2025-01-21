@@ -12,6 +12,7 @@ import {
 } from "@ionic/react";
 import ImageDisplay from "../components/ImageDisplay";
 import Rate from "../components/Rate";
+import { auth } from "../firebaseConfig";
 
 export interface RecipeData {
   recipeId: string;
@@ -28,6 +29,7 @@ interface Props {
 
 const Recipe: React.FC<Props> = ({ recipeData }) => {
   const linkToCreator = "/profile/" + recipeData.creatorId;
+  const linkToEdit = "/edit/" + recipeData.recipeId;
   console.log(linkToCreator);
   return (
     <IonContent fullscreen>
@@ -72,6 +74,9 @@ const Recipe: React.FC<Props> = ({ recipeData }) => {
       <IonButton expand="block" href={linkToCreator}>
         go to creator page
       </IonButton>
+      {(recipeData.creatorId===auth.currentUser?.uid)&&<IonButton expand="block" href={linkToEdit}>
+        edit recipe
+      </IonButton>} 
       <Rate recipeId={recipeData.recipeId} />
     </IonContent>
   );
