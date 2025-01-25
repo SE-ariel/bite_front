@@ -1,25 +1,17 @@
 import React from "react";
-import {
-  IonButton,
-  IonCard,
-  IonCardContent,
-  IonCardHeader,
-  IonCardTitle,
-  IonContent,
-  IonItem,
-  IonList,
-  IonText,
-} from "@ionic/react";
+import { IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonContent, IonItem, IonList, IonText, IonButton } from "@ionic/react";
+import { saveRecipeToUser } from "../logics/SavedRecipes"; 
 import ImageDisplay from "../components/ImageDisplay";
 import Rate from "../components/Rate";
+import { auth } from "../firebaseConfig";
 
 export interface RecipeData {
-  recipeId: string;
+  recipeId: string; // ה-ID של המתכון
   title: string;
   creatorId: string;
   ingredients: string[];
   instructions: string[];
-  imageId: string;
+  imageId: string; // תמונה אופציונלית
 }
 
 interface Props {
@@ -28,7 +20,12 @@ interface Props {
 
 const Recipe: React.FC<Props> = ({ recipeData }) => {
   const linkToCreator = "/profile/" + recipeData.creatorId;
-  console.log(linkToCreator);
+  const linkToEdit = "/edit/" + recipeData.recipeId;
+  const handleSaveRecipe = async () => {
+    console.log("Saving recipe with ID:", recipeData.recipeId); // לוג לבדיקת ה-ID
+    await saveRecipeToUser(recipeData.recipeId); // שמירת המתכון לפי ה-ID
+  };
+
   return (
     <IonContent fullscreen>
       <IonCard>
@@ -64,7 +61,10 @@ const Recipe: React.FC<Props> = ({ recipeData }) => {
               </IonItem>
             ))}
           </IonList>
-          {recipeData.imageId && recipeData.imageId.length > 0 && (
+          <IonButton expand="block" onClick={handleSaveRecipe}>
+            Save Recipe
+          </IonButton>
+        {recipeData.imageId && recipeData.imageId.length > 0 && (
           <ImageDisplay documentId={recipeData.imageId} />
         )}
         </IonCardContent>
@@ -72,6 +72,9 @@ const Recipe: React.FC<Props> = ({ recipeData }) => {
       <IonButton expand="block" href={linkToCreator}>
         go to creator page
       </IonButton>
+      {(recipeData.creatorId===auth.currentUser?.uid)&&<IonButton expand="block" href={linkToEdit}>
+        edit recipe
+      </IonButton>} 
       <Rate recipeId={recipeData.recipeId} />
     </IonContent>
   );

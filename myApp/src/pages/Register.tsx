@@ -24,7 +24,7 @@ const Register: React.FC = () => {
     setEmail,
     password,
     setPassword,
-    setProvider,
+    triggerSocialLogin,
     error,
     handleRegister,
   } = useRegister();
@@ -34,7 +34,7 @@ const Register: React.FC = () => {
       <IonContent className="ion-padding">
         {/* Header */}
         <div className="header-icon">
-          <img src="../favicon2.png" alt="App Logo" />
+          <img src="/favicon2.png" alt="App Logo" />
         </div>
         {/* Main Container */}
         <div className="main-container">
@@ -99,20 +99,14 @@ const Register: React.FC = () => {
               <IonButton
                 size="large"
                 className="social-button google-button"
-                onClick={() => {
-                  setProvider("Google");
-                  handleRegister();
-                }}
+                onClick={() => triggerSocialLogin("Google")}
               >
                 <IonIcon size="large" slot="icon-only" icon={logoGoogle} />
               </IonButton>
               <IonButton
                 size="large"
                 className="social-button facebook-button"
-                onClick={() => {
-                  setProvider("Facebook");
-                  handleRegister();
-                }}
+                onClick={() => triggerSocialLogin("Facebook")}
               >
                 <IonIcon size="large" slot="icon-only" icon={logoFacebook} />
               </IonButton>

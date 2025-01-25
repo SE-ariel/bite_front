@@ -1,4 +1,3 @@
-import { useState } from "react";
 import {
   IonPage,
   IonContent,
@@ -8,20 +7,22 @@ import {
   IonSelect,
   IonSelectOption,
 } from "@ionic/react";
-import { useRegister } from "../logics/Register";
+import { useSetup } from "../logics/SetUp";
 
 const SetupProfile: React.FC = () => {
-  const [error] = useState<string | null>(null);
-
   const {
-    role,
-    setRole,
-    surName,
-    setSurName,
     firstName,
     setFirstName,
+    surName,
+    setSurName,
+    role,
+    setRole,
+    email,
+    setEmail,
+    error,
+    isSubmitting,
     handleSubmit,
-  } = useRegister();
+  } = useSetup();
 
   return (
     <IonPage>
@@ -33,14 +34,23 @@ const SetupProfile: React.FC = () => {
           labelPlacement="floating"
           value={firstName}
           onIonInput={(e) => setFirstName(e.detail.value || "")}
+          placeholder="Enter your first name"
         />
         <IonInput
           label="Last Name"
           labelPlacement="floating"
           value={surName}
           onIonInput={(e) => setSurName(e.detail.value || "")}
+          placeholder="Enter your last name"
         />
-
+        <IonInput
+          label="Email"
+          labelPlacement="floating"
+          type="email"
+          value={email}
+          onIonInput={(e) => setEmail(e.detail.value || "")}
+          placeholder="Enter your email"
+        />
         <IonSelect
           value={role}
           onIonChange={(e) => setRole(e.detail.value)}
@@ -54,8 +64,12 @@ const SetupProfile: React.FC = () => {
 
         {error && <IonText color="danger">{error}</IonText>}
 
-        <IonButton expand="block" onClick={handleSubmit}>
-          Save Details
+        <IonButton
+          expand="block"
+          onClick={handleSubmit}
+          disabled={isSubmitting}
+        >
+          {isSubmitting ? "Saving..." : "Save Details"}
         </IonButton>
       </IonContent>
     </IonPage>
