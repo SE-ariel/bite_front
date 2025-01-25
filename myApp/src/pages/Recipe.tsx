@@ -3,6 +3,7 @@ import { IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonContent, IonIt
 import { saveRecipeToUser } from "../logics/SavedRecipes"; 
 import ImageDisplay from "../components/ImageDisplay";
 import Rate from "../components/Rate";
+import { auth } from "../firebaseConfig";
 
 export interface RecipeData {
   recipeId: string; // ה-ID של המתכון
@@ -19,6 +20,7 @@ interface Props {
 
 const Recipe: React.FC<Props> = ({ recipeData }) => {
   const linkToCreator = "/profile/" + recipeData.creatorId;
+  const linkToEdit = "/edit/" + recipeData.recipeId;
   const handleSaveRecipe = async () => {
     console.log("Saving recipe with ID:", recipeData.recipeId); // לוג לבדיקת ה-ID
     await saveRecipeToUser(recipeData.recipeId); // שמירת המתכון לפי ה-ID
@@ -70,6 +72,9 @@ const Recipe: React.FC<Props> = ({ recipeData }) => {
       <IonButton expand="block" href={linkToCreator}>
         go to creator page
       </IonButton>
+      {(recipeData.creatorId===auth.currentUser?.uid)&&<IonButton expand="block" href={linkToEdit}>
+        edit recipe
+      </IonButton>} 
       <Rate recipeId={recipeData.recipeId} />
     </IonContent>
   );

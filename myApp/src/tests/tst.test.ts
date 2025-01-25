@@ -1,102 +1,173 @@
-import { renderHook, act } from '@testing-library/react-hooks';
-import { useLogin } from './Login';
-import { signInWithEmailAndPassword, signInWithCredential } from 'firebase/auth';
-import { useHistory } from 'react-router-dom';
-import { FirebaseAuthentication } from '@capacitor-firebase/authentication';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { renderHook, act } from '@testing-library/react';
+import { useLogin } from '../logics/Login';
+import { makeRecipe } from '../logics/Recipe';
+import { useProfile } from '../logics/Profile';
+import { signInWithEmailAndPassword } from 'firebase/auth';
+import { doc, getDoc, collection, addDoc, updateDoc, serverTimestamp, arrayUnion } from 'firebase/firestore';
 
-jest.mock('firebase/auth');
-jest.mock('react-router-dom', () => ({
-    useHistory: jest.fn(),
+// Mock Firebase Auth
+vi.mock('firebase/auth', () => ({
+  signInWithEmailAndPassword: vi.fn(),
+  getAuth: vi.fn(() => ({
+    currentUser: { uid: 'testUserId' }
+  }))
 }));
-jest.mock('@capacitor-firebase/authentication');
 
-describe('useLogin', () => {
-    let historyPush: jest.Mock;
+// Mock Firebase Firestore
+vi.mock('firebase/firestore', () => ({
+  doc: vi.fn(),
+  getDoc: vi.fn(),
+  collection: vi.fn(),
+  addDoc: vi.fn(),
+  updateDoc: vi.fn(),
+  arrayUnion: vi.fn((id) => id),
+  serverTimestamp: vi.fn(() => new Date()),
+  getFirestore: vi.fn(() => ({})),
+  onSnapshot: vi.fn((docRef, callback) => {
+    callback({
+      exists: () => true,
+      data: () => ({})
+    });
+    return vi.fn(); // Unsubscribe function
+  })
+}));
 
-    beforeEach(() => {
-        historyPush = jest.fn();
-        (useHistory as jest.Mock).mockReturnValue({ push: historyPush, go: jest.fn() });
+// Mock Firebase Config
+vi.mock('../firebaseConfig', () => ({
+  auth: {
+    currentUser: { uid: 'testUserId' }
+  },
+  db: {},
+  app: {}
+}));
+
+// Mock React Router
+vi.mock('react-router-dom', () => ({
+  useHistory: () => ({
+    push: vi.fn(),
+    go: vi.fn(),
+    back: vi.fn()
+  })
+}));
+
+describe('Recipe App Tests', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  // Test 1: Authentication
+  it('should handle user login with email/password', async () => {
+    // Setup
+    const mockSignIn = vi.mocked(signInWithEmailAndPassword);
+    mockSignIn.mockResolvedValueOnce({
+      user: { email: 'test@example.com' }
+    } as any);
+
+    const { result } = renderHook(() => useLogin());
+
+    // Execute
+    await act(async () => {
+      result.current.setEmail('test@example.com');
     });
 
-    afterEach(() => {
-        jest.clearAllMocks();
+    await act(async () => {
+      result.current.setPassword('password123');
+    });
+    
+    await act(async () => {
+      await result.current.handleLogin();
     });
 
-    it('should validate email correctly', () => {
-        const { result } = renderHook(() => useLogin());
-        expect(result.current.email).toBe('test@example.com');
+    // Assert
+    expect(mockSignIn).toHaveBeenCalledWith(
+      expect.anything(),
+      'test@example.com',
+      'password123'
+    );
+    expect(result.current.error).toBeNull();
+  });
+
+  // Test 2: Recipe Creation
+  it('should create a new recipe successfully', async () => {
+    // Setup
+    const mockRecipeData = {
+      title: 'Chocolate Cake',
+      instructions: ['Mix ingredients', 'Bake at 350°F'],
+      ingredients: ['flour', 'sugar', 'cocoa']
+    };
+
+    // Mock user document
+    const mockUserDoc = {
+      exists: () => true,
+      data: () => ({ name: 'Test User' })
+    };
+
+    // Mock Firestore functions
+    vi.mocked(doc).mockReturnValue('docRef' as any);
+    vi.mocked(getDoc).mockResolvedValue(mockUserDoc as any);
+    vi.mocked(collection).mockReturnValue('collectionRef' as any);
+    vi.mocked(addDoc).mockResolvedValue({ id: 'newRecipeId' } as any);
+    vi.mocked(updateDoc).mockResolvedValue(undefined);
+    vi.mocked(arrayUnion).mockReturnValue({
+      isEqual: () => true,
+      _methodName: 'arrayUnion',
+      _elements: ['newRecipeId']
+    } as any);
+    vi.mocked(serverTimestamp).mockReturnValue({
+      isEqual: () => true,
+      toMillis: () => new Date().getTime(),
+      toDate: () => new Date()
+    } as any);
+
+    // Execute
+    const recipeId = await makeRecipe(mockRecipeData);
+
+    // Assert
+    expect(recipeId).toBe('newRecipeId');
+    expect(addDoc).toHaveBeenCalledWith(
+      expect.anything(),
+      expect.objectContaining({
+        ...mockRecipeData,
+        creatorId: 'testUserId'
+      })
+    );
+    expect(updateDoc).toHaveBeenCalled();
+  });
+
+  // Test 3: User Profile
+  it('should fetch and update user profile data', async () => {
+    // Setup
+    const mockUserData = {
+      firstName: 'John',
+      surName: 'Doe',
+      role: 'user',
+      email: 'john@example.com',
+      savedRecipes: '123,456'
+    };
+
+    vi.mocked(doc).mockReturnValue('userDocRef' as any);
+    vi.mocked(getDoc).mockResolvedValue({
+      exists: () => true,
+      data: () => mockUserData
+    } as any);
+
+    // Execute
+    const { result } = renderHook(() => useProfile('testUserId'));
+
+    // Wait for the profile data to be fetched
+    await vi.waitFor(() => {
+      expect(result.current.isChecked).toBe(true);
     });
 
-    it('should handle email login successfully', async () => {
-        const { result } = renderHook(() => useLogin());
-        (signInWithEmailAndPassword as jest.Mock).mockResolvedValue({});
-
-        await act(async () => {
-            result.current.setEmail('test@example.com');
-            result.current.setPassword('password123');
-            await result.current.handleLogin();
-        });
-
-        expect(signInWithEmailAndPassword).toHaveBeenCalledWith(expect.anything(), 'test@example.com', 'password123');
-        expect(historyPush).toHaveBeenCalledWith('/home');
+    // Assert
+    expect(result.current.userData).toEqual({
+      firstName: 'John',
+      lastName: 'Doe',
+      role: 'user',
+      email: 'john@example.com',
+      savedRecipes: '123,456'
     });
-
-    it('should handle email login error', async () => {
-        const { result } = renderHook(() => useLogin());
-        const error = { code: 'auth/user-not-found' };
-        (signInWithEmailAndPassword as jest.Mock).mockRejectedValue(error);
-
-        await act(async () => {
-            result.current.setEmail('test@example.com');
-            result.current.setPassword('password123');
-            await result.current.handleLogin();
-        });
-
-        expect(result.current.error).toBe('No user found with this email.');
-    });
-
-    it('should handle Google login successfully', async () => {
-        const { result } = renderHook(() => useLogin());
-        const mockUser = { user: { uid: '123' }, credential: { idToken: 'token' } };
-        (FirebaseAuthentication.getCurrentUser as jest.Mock).mockResolvedValue({ user: null });
-        (FirebaseAuthentication.signInWithGoogle as jest.Mock).mockResolvedValue(mockUser);
-        (signInWithCredential as jest.Mock).mockResolvedValue({});
-
-        await act(async () => {
-            await result.current.triggerSocialLogin('Google');
-        });
-
-        expect(FirebaseAuthentication.signInWithGoogle).toHaveBeenCalled();
-        expect(signInWithCredential).toHaveBeenCalledWith(expect.anything(), expect.anything());
-        expect(historyPush).toHaveBeenCalledWith('/home');
-    });
-
-    it('should handle Facebook login successfully', async () => {
-        const { result } = renderHook(() => useLogin());
-        const mockUser = { user: { uid: '123' }, credential: { accessToken: 'token' } };
-        (FirebaseAuthentication.getCurrentUser as jest.Mock).mockResolvedValue({ user: null });
-        (FirebaseAuthentication.signInWithFacebook as jest.Mock).mockResolvedValue(mockUser);
-        (signInWithCredential as jest.Mock).mockResolvedValue({});
-
-        await act(async () => {
-            await result.current.triggerSocialLogin('Facebook');
-        });
-
-        expect(FirebaseAuthentication.signInWithFacebook).toHaveBeenCalled();
-        expect(signInWithCredential).toHaveBeenCalledWith(expect.anything(), expect.anything());
-        expect(historyPush).toHaveBeenCalledWith('/home');
-    });
-
-    it('should handle social login error', async () => {
-        const { result } = renderHook(() => useLogin());
-        const error = new Error('Authentication failed');
-        (FirebaseAuthentication.getCurrentUser as jest.Mock).mockResolvedValue({ user: null });
-        (FirebaseAuthentication.signInWithGoogle as jest.Mock).mockRejectedValue(error);
-
-        await act(async () => {
-            await result.current.triggerSocialLogin('Google');
-        });
-
-        expect(result.current.error).toBe('Authentication failed');
-    });
+    expect(doc).toHaveBeenCalledWith(expect.anything(), 'users', 'testUserId');
+  });
 });

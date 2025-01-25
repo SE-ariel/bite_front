@@ -17,6 +17,7 @@ const PostTitleField: React.FC<PostTitleFieldProps> = ({ title, setTitle }) => {
                 onIonChange={(e) => setTitle(e.detail.value!)}
                 placeholder="Enter the recipe title"
                 className="ion-input"
+                data-testid="title_field" 
             />
         </IonItem>
     );

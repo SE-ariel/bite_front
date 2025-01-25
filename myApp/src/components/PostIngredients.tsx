@@ -17,6 +17,7 @@ const RecipeIngredientsField: React.FC<RecipeIngredientsFieldProps> = ({ ingredi
                 onIonChange={(e) => setIngredients(e.detail.value!)}
                 placeholder="Enter ingredients, one per line"
                 autoGrow={true}
+                data-testid="ingredients_field" 
             />
         </IonItem>
     );
