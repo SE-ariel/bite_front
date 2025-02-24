@@ -8,7 +8,13 @@ import {
   IonPage,
   IonIcon,
   IonText,
+  IonCard,
+  IonCardHeader,
+  IonCardTitle,
+  IonCardContent,
+  IonCardSubtitle,
 } from "@ionic/react";
+import { Capacitor } from "@capacitor/core";
 // Login Component Example
 const Login: React.FC = () => {
   const {
@@ -68,13 +74,36 @@ const Login: React.FC = () => {
           </div>
           <div className="footer">
             Not a member?{" "}
-            <a className = "register"
-              href="/register"
-            >
+            <a className="register" href="/register">
               Sign up
             </a>
           </div>
-        </div>
+        </div>       
+          <div>
+            {"or"}
+          </div>  
+          {!Capacitor.isNativePlatform() && ( 
+            <div className="main-container">
+              <IonCardHeader>
+                <IonCardTitle>Use the android app</IonCardTitle>
+              </IonCardHeader>
+              <IonCardContent>
+                <IonCardHeader>
+                  <IonCardSubtitle>Install Instructions:</IonCardSubtitle>
+                  <IonCardSubtitle>
+                    {"Settings > Install unknown apps > Drive > Allow"}
+                  </IonCardSubtitle>
+                </IonCardHeader>
+                <IonButton
+                  size="large"
+                  href="https://drive.google.com/file/d/1PR0YTQxZaXVUVzHP_T-BI4Q5X2IX8abU/view?usp=sharing"
+                >
+                  Download the APK
+                </IonButton>
+              </IonCardContent>
+            </div>
+           )
+            }        
       </IonContent>
     </IonPage>
   );
